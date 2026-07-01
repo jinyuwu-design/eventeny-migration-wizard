@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventeny — Data Migration Wizard</title>
+<style>
+/* Inline fallback so the file works standalone too */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Embed all tokens inline so single-file works without the CSS file */
+:root {
+  --font-family-primary:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-weight-regular:400;--font-weight-medium:500;--font-weight-semibold:600;
+  --font-size-p1:18px;--font-size-p2:16px;--font-size-p3:14px;--font-size-p4:12px;
+  --font-size-h3:24px;--font-size-h4:20px;
+  --line-height-p1:28px;--line-height-p2:24px;--line-height-p3:18px;--line-height-p4:16px;
+  --line-height-h3:32px;
+  --space-2:2px;--space-4:4px;--space-6:6px;--space-8:8px;--space-12:12px;
+  --space-16:16px;--space-24:24px;--space-32:32px;--space-40:40px;--space-48:48px;--space-64:64px;
+  --radius-4:4px;--radius-6:6px;--radius-8:8px;--radius-16:16px;
+  --stroke-1:1px;--stroke-3:4px;
+  --shadow-sm:0px 4px 8px 0px rgba(34,34,34,.10);
+  --shadow-md:0px 4px 16px rgba(34,34,34,.20);
+  --shadow-lg:0px 16px 32px rgba(34,34,34,.12);
+  --teal-50:#e6f6f5;--teal-100:#ceedec;--teal-200:#9cdbd9;--teal-300:#6bcac6;
+  --teal-400:#39b8b3;--teal-500:#08a6a0;--teal-600:#038580;--teal-700:#056460;
+  --teal-800:#034240;--teal-900:#022120;
+  --green-50:#e9f3ed;--green-100:#d1f0e1;--green-500:#08a66c;--green-600:#068556;
+  --red-50:#fbebee;--red-100:#f7d7dc;--red-200:#efb0ba;--red-500:#d63952;--red-600:#ab2e42;
+  --yellow-50:#fffaed;--yellow-100:#fef5db;--yellow-500:#fccb4d;--yellow-600:#caa23e;
+  --blue-50:#e9f1f9;--blue-500:#085aa6;--blue-600:#2478c8;
+  --orange-50:#ffefea;--orange-500:#fd632b;
+  --grey-50:#f5f6f6;--grey-100:#ebeded;--grey-200:#d8dbdb;--grey-300:#b1b8b7;
+  --grey-400:#9da6a5;--grey-500:#7e8584;--grey-600:#5e6463;--grey-700:#3f4242;
+  --grey-800:#1f2121;--grey-900:#222222;
+  --color-bg-default:white;--color-bg-on-brand-primary:#038580;
+  --color-bg-information:#e9f1f9;--color-bg-warning:#fef5db;
+  --color-bg-positive:#e9f3ed;--color-bg-negative:#fbebee;
+  --color-bg-overlay:rgba(0,0,0,.2);
+  --color-text-primary:#222;--color-text-secondary:#5e6463;
+  --color-text-inverse:white;--color-text-link:#026e80;
+  --color-border-default:#9da6a5;--color-border-subtle:#c4cac9;--color-border-strong:#3f4242;
+  --color-status-brand-primary:#038580;--color-status-negative:#d63952;
+  --color-status-warning:#fccb4d;--color-status-information:#2478c8;
+  --color-status-positive:#08a66c;--color-status-warning-subtle:#fef5db;
+  --color-gray-200:#d8dbdb;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font-family-primary);font-size:var(--font-size-p2);line-height:var(--line-height-p2);color:var(--color-text-primary);background:#ffffff;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font-family:var(--font-family-primary);}
+button{cursor:pointer;border:none;background:none;}
+
+/* ── BUTTONS ── */
+/* BUTTON — exact from Figma node 136:1234
+   Container: bg:#038580 px:24px py:12px radius:4px min-w:180px flex-col items-center justify-center
+   Inner Base: flex gap:8px items-center justify-center w-full
+   Text: P2/Medium white 16px lh:24px whitespace:nowrap
+   Icon: size:24px flex-col items-start justify-center */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-family-primary);font-weight:var(--font-weight-medium);font-size:var(--font-size-p2);line-height:var(--line-height-p2);white-space:nowrap;border-radius:var(--radius-4);transition:background .15s,border-color .15s,color .15s;cursor:pointer;border:var(--stroke-1) solid transparent;text-decoration:none;min-width:180px;padding:12px 24px;}
+.btn-lg{height:48px;padding:12px 24px;font-size:var(--font-size-p1);}
+.btn-md{height:40px;padding:8px 24px;}
+.btn-sm{height:32px;padding:4px 16px;font-size:var(--font-size-p3);min-width:unset;}
+.btn-primary{background:var(--color-status-brand-primary);color:var(--color-text-inverse);border-color:var(--color-status-brand-primary);}
+.btn-primary:hover{background:var(--teal-700);border-color:var(--color-status-brand-primary);}
+.btn-primary:disabled{background:var(--grey-300);border-color:var(--color-text-secondary);cursor:not-allowed;opacity:.6;}
+.btn-secondary{background:var(--color-bg-default);color:var(--color-status-brand-primary);border-color:var(--color-status-brand-primary);}
+.btn-secondary:hover{background:var(--teal-50);}
+.btn-tertiary{background:transparent;color:var(--color-text-secondary);border-color:var(--color-text-secondary);}
+.btn-tertiary:hover{background:var(--grey-50);border-color:var(--color-text-secondary);}
+.btn-danger{background:var(--color-status-negative);color:var(--color-text-inverse);}
+.btn-danger:hover{background:var(--red-600);}
+/* Icon inside button — size:24px, exact from Figma */
+.btn-icon-el{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-style:normal;}
+.btn-icon{padding:var(--space-6);border-radius:var(--radius-4);color:var(--color-text-secondary);font-size:16px;line-height:1;min-width:unset;}
+.btn-icon:hover{background:var(--grey-100);color:var(--color-text-primary);}
+
+/* ── LAYOUT ── */
+.topnav{background:white;border-bottom:var(--stroke-1) solid var(--grey-200);padding:0 var(--space-32);height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topnav-brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--color-status-brand-primary);}
+.topnav-brand svg{width:32px;height:32px;}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--teal-500);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;}
+.wizard-shell{width:100%;padding:var(--space-32) var(--space-48) 80px;}
+
+/* ── STEP PROGRESS — translated exactly from Figma node 1414:21609
+   Container:    flex flex-wrap gap-[0px_4px] h-[56px] items-start
+   Step item:    flex-col gap-[4px] h-[56px] items-center min-w-[70px] shrink-0
+   Icon wrap:    flex items-center p-[4px]
+   Icon:         size-[20px]  (SVG radio asset)
+   Label:        absolute top-[32px] left-[35px] -translate-x-1/2
+                 P2/Medium teal (current) | P2/Regular #222 (done) | P2/Regular #5e6463 (future)
+   Divider wrap: flex-col h-[28px] items-start justify-center w-[100px] shrink-0
+   Divider line: h-[2px] w-full radius-4px
+                 incomplete = #5e6463 | complete = #038580
+── */
+.step-progress {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;    /* spread steps evenly with space around dividers */
+  height: 56px;                      /* exact: h-[56px] */
+  position: relative;
+  margin-bottom: 48px;
+  width: 100%;
+}
+.sp-track { display: contents; }    /* not used — items go directly in .step-progress */
+
+/* Step item */
+.sp-step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;                          /* exact: gap-[4px] */
+  height: 56px;                      /* exact: h-[56px] */
+  align-items: center;
+  min-width: 70px;                   /* exact: min-w-[70px] */
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;                        /* stack above divider lines */
+}
+/* Icon wrapper */
+.sp-icon {
+  display: flex;
+  align-items: center;
+  padding: 4px;                      /* exact: p-[4px] */
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+/* Circle (CSS replacement for SVG asset) */
+.sp-circle {
+  width: 20px; height: 20px;         /* exact: size-[20px] */
+  border-radius: 50%;
+  border: 1.5px solid var(--grey-400);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  transition: all .2s;
+  z-index: 1;
+}
+/* Current step — teal outlined radio with inner dot */
+.sp-step.active .sp-circle {
+  border: 2px solid var(--color-status-brand-primary);
+  background: white;
+}
+.sp-step.active .sp-circle::after {
+  content: '';
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--color-status-brand-primary);
+  position: absolute;
+}
+/* Done — filled teal + checkmark */
+.sp-step.done .sp-circle {
+  background: var(--color-status-brand-primary);   /* exact: bg-[var(--color/status/brand-primary,#038580)] */
+  border-color: var(--color-status-brand-primary);
+  border-radius: 100px;              /* exact: rounded-[border-radius-100] */
+}
+.sp-step.done .sp-circle::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 7px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+/* Label — absolute positioned exactly as Figma: top-[32px] left-[35px] -translate-x-1/2 */
+.sp-label {
+  position: absolute;
+  top: 32px;                         /* exact: top-[32px] */
+  left: 35px;                        /* exact: left-[35px] */
+  transform: translateX(-50%);       /* exact: -translate-x-1/2 */
+  font-size: var(--font-size-p2);    /* 16px */
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-p2);
+  color: var(--color-text-secondary); /* #5e6463 — future */
+  white-space: nowrap;
+  text-align: center;
+}
+.sp-step.active .sp-label {
+  font-weight: var(--font-weight-medium);           /* exact: Medium */
+  color: var(--color-status-brand-primary);         /* exact: #038580 */
+}
+.sp-step.done .sp-label {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);                 /* exact: #222 */
+}
+
+/* Divider wrapper — exact: flex-col h-[28px] items-start justify-center w-[100px] shrink-0 */
+.sp-divider {
+  display: flex;
+  flex-direction: column;
+  height: 28px;                      /* exact: h-[28px] */
+  align-items: center;
+  justify-content: center;
+  flex: 1;                           /* fill available space between steps */
+  min-width: 40px;
+}
+/* Divider line — exact: h-[2px] rounded-4px. Margin creates gap from circles. */
+.sp-divider-line {
+  height: 2px;
+  width: calc(100% - 16px);          /* leave 8px gap on each side */
+  margin: 0 8px;
+  border-radius: 4px;                /* exact: border-radius-4 */
+  background: var(--color-text-secondary);          /* exact: #5e6463 — incomplete */
+  transition: background .3s;
+}
+.sp-divider.done .sp-divider-line {
+  background: var(--color-status-brand-primary);    /* exact: #038580 — complete */
+}
+
+/* ── CARD ── */
+.card{background:transparent;border:none;box-shadow:none;border-radius:0;padding:0;}
+.card-eyebrow{font-size:var(--font-size-p4);font-weight:var(--font-weight-semibold);color:var(--color-status-brand-primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:var(--space-8);}
+.card-title{font-size:22px;font-weight:700;line-height:30px;color:var(--color-text-primary);margin-bottom:var(--space-8);}
+.card-desc{font-size:var(--font-size-p2);color:var(--color-text-secondary);line-height:var(--line-height-p2);}
+.card-header{margin-bottom:var(--space-24);}
+.wizard-footer{display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-32);padding-top:var(--space-24);border-top:var(--stroke-1) solid var(--grey-200);}
+.divider{height:var(--stroke-1);background:var(--grey-200);margin:var(--space-24) 0;}
+
+/* ── FORM ELEMENTS ── */
+.form-group{display:flex;flex-direction:column;gap:var(--space-4);margin-bottom:var(--space-16);}
+.form-label{display:flex;align-items:center;gap:var(--space-4);font-size:var(--font-size-p3);font-weight:var(--font-weight-regular);line-height:var(--line-height-p3);color:var(--color-text-primary);}
+.form-label .req{color:var(--color-status-negative);}
+.form-input{width:100%;height:40px;padding:var(--space-8) var(--space-8);background:var(--color-bg-default);border:var(--stroke-1) solid var(--color-border-default);border-radius:var(--radius-4);font-family:var(--font-family-primary);font-size:var(--font-size-p2);font-weight:var(--font-weight-regular);color:var(--color-text-primary);transition:border-color .15s,box-shadow .15s;outline:none;}
+.form-input::placeholder{color:var(--color-text-secondary);}
+.form-input:hover{border-color:var(--color-text-secondary);}
+.form-input:focus{border-color:var(--color-status-brand-primary);box-shadow:0 0 0 3px rgba(8,166,160,.15);}
+.form-hint{font-size:var(--font-size-p4);color:var(--color-text-secondary);}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239da6a5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:36px;}
+
+/* ── TYPE SELECTION (Step 1) ── */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-16);}
+.type-card{border:1px solid var(--color-border-default);border-radius:var(--radius-8);padding:var(--space-24);cursor:pointer;transition:border-color .15s,background .15s;display:flex;flex-direction:column;gap:var(--space-12);background:white;position:relative;}
+.type-card:hover{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.type-card.selected{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+/* type-card selected — uses same circle+checkmark pattern as sp-circle.done */
+.type-card.selected::after{
+  content:'';
+  position:absolute;top:12px;right:12px;
+  width:20px;height:20px;
+  border-radius:50%;                          /* radius-100px */
+  background:var(--color-status-brand-primary); /* #038580 */
+  border:2px solid var(--color-status-brand-primary);
+  z-index:1;
+}
+.type-card.selected::before{
+  content:'';
+  position:absolute;top:18px;right:17px;
+  width:10px;height:7px;
+  border-left:2px solid white;
+  border-bottom:2px solid white;
+  transform:rotate(-45deg) translate(1px,-1px);
+  z-index:2;
+}
+.type-icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px;}
+.type-title{font-size:17px;font-weight:700;color:var(--color-text-primary);}
+.type-desc{font-size:var(--font-size-p3);color:var(--color-text-secondary);line-height:20px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:var(--space-4);margin-top:var(--space-4);}
+
+/* Event destination */
+.event-section{margin-top:var(--space-32);padding-top:var(--space-24);border-top:var(--stroke-1) solid var(--grey-200);}
+.section-title{font-size:var(--font-size-p2);font-weight:600;color:var(--color-text-primary);margin-bottom:4px;}
+.section-desc{font-size:var(--font-size-p3);color:var(--color-text-secondary);margin-bottom:var(--space-16);}
+.global-repo-opt{border:1px dashed var(--color-border-default);border-radius:var(--radius-8);padding:var(--space-16);display:flex;align-items:center;gap:var(--space-16);cursor:pointer;background:white;transition:all .15s;margin-bottom:var(--space-12);}
+.global-repo-opt:hover{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.global-repo-opt.selected{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.repo-icon{width:40px;height:40px;background:var(--teal-50);border-radius:10px;display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.repo-title{font-size:15px;font-weight:600;color:var(--color-text-primary);}
+.repo-desc{font-size:var(--font-size-p3);color:var(--color-text-secondary);}
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--space-12);}
+.event-card{border:1px solid var(--color-border-default);border-radius:var(--radius-8);padding:var(--space-12) var(--space-16);cursor:pointer;background:white;transition:border-color .15s;}
+.event-card:hover{border-color:var(--color-status-brand-primary);}
+.event-card.selected{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.ev-id{font-size:10px;color:var(--color-text-secondary);font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+.ev-name{font-size:var(--font-size-p3);font-weight:700;color:var(--color-text-primary);margin-top:2px;}
+.ev-date{font-size:12px;color:var(--color-text-secondary);margin-top:2px;}
+
+/* ── FILE UPLOAD (Step 2) ── */
+/* Extracted from Figma node 7444:12467 — dashed border #c4cac9, stroke-weight 3px, radius 8px */
+.file-upload-zone{position:relative;background:var(--color-bg-default);border:3px dashed var(--color-border-subtle);border-radius:var(--radius-8);padding:var(--space-64) var(--space-24);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-4);cursor:pointer;transition:border-color .2s,background .2s;min-height:208px;text-align:center;overflow:hidden;}
+.file-upload-zone:hover,.file-upload-zone.drag-over{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.file-upload-zone.has-file{border-color:var(--green-500);background:var(--green-50);}
+.file-upload-zone.has-error{border-color:var(--color-status-negative);background:var(--red-50);}
+.file-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+/* "Select files" text: P3/SemiBold, color: #0389a0 (link) — from Figma */
+.file-upload-select{font-size:var(--font-size-p3);font-weight:var(--font-weight-semibold);line-height:var(--line-height-p3);color:var(--color-text-link);}
+/* helper below dropzone: P4/Regular, #5e6463 — from Figma */
+.file-upload-info{font-size:var(--font-size-p4);font-weight:var(--font-weight-regular);line-height:var(--line-height-p4);color:var(--color-text-secondary);}
+.file-card{display:flex;align-items:center;gap:var(--space-16);padding:var(--space-16);background:white;border:var(--stroke-1) solid var(--green-500);border-radius:var(--radius-8);margin-top:var(--space-16);}
+.file-card-icon{width:40px;height:40px;background:var(--green-50);border-radius:10px;display:grid;place-items:center;font-size:20px;flex-shrink:0;}
+.file-card-name{font-size:var(--font-size-p2);font-weight:var(--font-weight-medium);color:var(--color-text-primary);}
+.file-card-meta{font-size:var(--font-size-p4);color:var(--color-text-secondary);margin-top:2px;}
+.upload-err{display:flex;align-items:flex-start;gap:var(--space-8);padding:var(--space-12) var(--space-16);background:var(--red-50);border:1px solid var(--red-200);border-radius:var(--radius-4);margin-bottom:var(--space-8);font-size:var(--font-size-p3);color:var(--red-600);}
+
+/* ── MAPPING TABLE (Step 3) ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius-8);border:var(--stroke-1) solid var(--grey-200);}
+/* TABLE — from Figma node 1326:43105 (Header) + 12400:27337 (Row) + 12400:27341 (Hover)
+   Header: bg:#f5f6f6 border-b:1px #c4cac9 h:56px px:16 py:8 P3/Medium #222
+   Row:    border-b:1px #ebeded min-h:44px px:16 py:8 P2/Regular #222
+   Hover:  bg:#f5f6f6 (color/bg/subtle) */
+.map-table{width:100%;border-collapse:collapse;}
+.map-table th{
+  background:var(--grey-50);
+  border-bottom:1px solid var(--color-border-subtle);
+  padding:var(--space-8) var(--space-16);
+  height:56px;
+  text-align:left;
+  font-size:var(--font-size-p3);
+  font-weight:var(--font-weight-medium);
+  line-height:var(--line-height-p3);
+  color:var(--color-text-primary);
+  white-space:nowrap;
+}
+.map-table td{
+  padding:var(--space-8) var(--space-16);
+  border-bottom:1px solid var(--grey-100);
+  vertical-align:middle;
+  min-height:44px;
+  font-size:var(--font-size-p2);
+  color:var(--color-text-primary);
+}
+.map-table tr:last-child td{border-bottom:none;}
+.map-table tr:hover td{background:var(--grey-50);}
+.map-select{width:100%;height:40px;padding:var(--space-4) var(--space-8);border:1px solid var(--color-border-default);border-radius:var(--radius-4);font-family:var(--font-family-primary);font-size:var(--font-size-p2);font-weight:var(--font-weight-regular);color:var(--color-text-primary);appearance:none;background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239da6a5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;cursor:pointer;}
+.map-select:hover{border-color:var(--color-border-strong);}
+.map-select:focus{outline:none;border-color:var(--color-border-default);box-shadow:none;}
+.map-select.auto{border-color:var(--color-border-default);background-color:white;}
+/* MAPPING STATUS LABELS — exact from Figma node 306:1293 (Label/Filled)
+   px:8px py:1px radius:4px border:1px same-as-bg P3/Regular white
+   Auto-matched: teal   #038580
+   Mapped:       green  #258750
+   Required:     red    #d63952
+   Not found:    yellow #fccb4d, text #222
+   Optional:     grey   #9da6a5
+   Skipped:      grey   #9da6a5 */
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:1px var(--space-8);border-radius:var(--radius-4);border:1px solid;font-size:var(--font-size-p3);font-weight:var(--font-weight-regular);line-height:var(--line-height-p3);white-space:nowrap;color:white;}
+.badge-auto    {background:#038580;border-color:#038580;}
+.badge-mapped  {background:#258750;border-color:#258750;}
+.badge-req     {background:var(--color-status-negative);border-color:var(--color-status-negative);}
+.badge-notfound{background:var(--yellow-500);border-color:var(--yellow-500);color:var(--color-text-primary);}
+.badge-opt     {background:var(--grey-400);border-color:var(--color-text-secondary);}
+.badge-skip    {background:var(--grey-400);border-color:var(--color-text-secondary);}
+.source-col{font-size:var(--font-size-p3);font-weight:600;color:var(--color-text-primary);}
+.source-sample{font-size:12px;color:var(--color-text-secondary);font-style:italic;margin-top:2px;}
+
+/* ── REVIEW (Step 4) ── */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-12);margin-bottom:var(--space-24);}
+.summary-card{border-radius:var(--radius-8);padding:var(--space-16) var(--space-20);text-align:center;}
+.summary-card.valid{background:var(--green-50);border:1px solid #b5e0cc;}
+.summary-card.skipped{background:var(--yellow-50);border:1px solid #f5dfa0;}
+.summary-card.invalid{background:var(--red-50);border:1px solid var(--red-200);}
+.summary-count{font-size:32px;font-weight:700;margin-bottom:4px;line-height:1;}
+.summary-card.valid .summary-count{color:var(--green-500);}
+.summary-card.skipped .summary-count{color:var(--color-text-secondary);}
+.summary-card.invalid .summary-count{color:var(--red-500);}
+.summary-label{font-size:var(--font-size-p3);font-weight:500;color:var(--color-text-secondary);}
+
+/* Tabs — extracted from Figma */
+.tabs{display:flex;border-bottom:2px solid var(--grey-200);}
+.tab{padding:var(--space-12) var(--space-16);font-size:var(--font-size-p2);font-weight:var(--font-weight-regular);color:var(--color-text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:var(--space-8);}
+.tab:hover{color:var(--color-text-primary);}
+.tab.active{color:var(--color-status-brand-primary);border-bottom-color:var(--color-status-brand-primary);font-weight:var(--font-weight-semibold);}
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;font-size:11px;background:var(--grey-200);color:var(--color-text-secondary);}
+.tab.active .tab-badge{background:var(--teal-500);color:white;}
+.tab-content{display:none;} .tab-content.active{display:block;}
+
+/* Data table */
+/* DATA TABLE — same Figma specs as map-table */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{
+  background:var(--grey-50);
+  border-bottom:1px solid var(--color-border-subtle);
+  padding:var(--space-8) var(--space-16);
+  height:56px;
+  text-align:left;
+  font-size:var(--font-size-p3);
+  font-weight:var(--font-weight-medium);
+  line-height:var(--line-height-p3);
+  color:var(--color-text-primary);
+  white-space:nowrap;
+}
+.data-table td{
+  padding:var(--space-8) var(--space-16);
+  border-bottom:1px solid var(--grey-100);
+  font-size:var(--font-size-p2);
+  color:var(--color-text-primary);
+  vertical-align:middle;
+  min-height:44px;
+}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--grey-50);}
+
+/* Status pill — extracted from Figma node 1326:42964 */
+/* radius: 16px, pl:8 pr:4 py:4, font P3/Regular */
+/* STATUS PILL — Figma node 7055:23172 (Standard/Awaiting) + 1361:81459 (Positive) + 1361:81462 (Negative)
+   Structure: bg:[subtle-color] px:8 py:4 radius:16px flex gap:8 items-center justify-center
+   Text: P3/Regular #222 (color/text/primary) for ALL variants — no colored text
+   Awaiting:   bg:#fef5db (color/status/warning-subtle)
+   Approved:   bg:#d3e7dc (color/status/positive-subtle)
+   Rejected:   bg:#f7d7dc (color/status/negative-subtle)
+   Waitlisted: bg:#e9f1f9 (color/bg/information)
+   Withdrawn:  bg:#f5f6f6 (color/bg/subtle) */
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--space-8);
+  padding:var(--space-4) var(--space-8);
+  border-radius:var(--radius-16);
+  font-size:var(--font-size-p3);
+  font-weight:var(--font-weight-regular);
+  line-height:var(--line-height-p3);
+  color:var(--color-text-primary);
+  white-space:nowrap;
+}
+.status-pill.awaiting  {background:#fef5db;}
+.status-pill.approved  {background:#d3e7dc;}
+.status-pill.rejected  {background:#f7d7dc;}
+.status-pill.waitlisted{background:#e9f1f9;}
+.status-pill.withdrawn {background:#f5f6f6;}
+
+/* Tag */
+/* TAG — Figma node 313:1039 (Primary) + 788:1092 (Secondary)
+   Primary:   bg:#e6f6f5 border:1px #038580 radius:4px px:8 py:4 P3/Regular #222
+   Secondary: bg:white   border:1px #9da6a5 same padding/radius/text */
+.tag{display:inline-flex;align-items:center;gap:var(--space-4);background:var(--teal-50);border:var(--stroke-1) solid var(--color-status-brand-primary);border-radius:var(--radius-4);padding:var(--space-4) var(--space-8);font-family:var(--font-family-primary);font-size:var(--font-size-p3);font-weight:var(--font-weight-regular);line-height:var(--line-height-p3);color:var(--color-text-primary);white-space:nowrap;}
+.tag-secondary{display:inline-flex;align-items:center;gap:var(--space-4);background:var(--color-bg-default);border:var(--stroke-1) solid var(--color-border-default);border-radius:var(--radius-4);padding:var(--space-4) var(--space-8);font-family:var(--font-family-primary);font-size:var(--font-size-p3);font-weight:var(--font-weight-regular);line-height:var(--line-height-p3);color:var(--color-text-primary);white-space:nowrap;}
+.tag-scope{font-size:10px;font-weight:400;opacity:.7;}
+
+/* Alert — extracted from Figma node 1064:8555 */
+/* bg:#e9f1f9, border:#2478c8, radius:4px, px:16 py:8 */
+.alert{display:flex;align-items:flex-start;gap:var(--space-24);padding:var(--space-8) var(--space-16);border-radius:var(--radius-4);border:var(--stroke-1) solid;font-size:var(--font-size-p2);line-height:var(--line-height-p2);margin-bottom:var(--space-16);}
+.alert-inner{display:flex;gap:var(--space-8);align-items:flex-start;flex:1;}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.alert-title{font-weight:var(--font-weight-medium);}
+.alert-info{background:var(--color-bg-information);border-color:var(--color-status-information);color:var(--color-text-primary);}
+.alert-success{background:var(--green-50);border-color:var(--green-500);}
+.alert-warning{background:var(--yellow-50);border-color:var(--yellow-500);}
+.alert-error{background:var(--red-50);border-color:var(--red-500);color:var(--red-600);}
+
+/* Vendor note box */
+.vendor-note{background:var(--yellow-50);border:1px solid #f5dfa0;border-radius:var(--radius-8);padding:var(--space-16) var(--space-20);margin-bottom:var(--space-24);}
+.vendor-note-title{font-size:var(--font-size-p3);font-weight:700;color:var(--color-text-secondary);margin-bottom:var(--space-8);display:flex;align-items:center;gap:var(--space-8);}
+.vendor-note-list{font-size:var(--font-size-p3);color:var(--color-text-primary);list-style:disc;padding-left:var(--space-20);display:flex;flex-direction:column;gap:var(--space-4);}
+.tags-box{background:var(--grey-50);border:var(--stroke-1) solid var(--grey-200);border-radius:var(--radius-8);padding:var(--space-16);margin-top:var(--space-16);}
+.tags-box-title{font-size:var(--font-size-p3);font-weight:600;color:var(--color-text-primary);margin-bottom:var(--space-8);}
+
+/* ── IMPORT / PROGRESS BAR (Step 5) ── */
+/* Extracted from Figma node 7444:12729 — track: #d8dbdb, fill: #038580, h:8px */
+.progress-track{width:100%;height:8px;background:var(--color-gray-200);border-radius:var(--radius-4);overflow:hidden;margin:var(--space-20) 0 var(--space-8);}
+.progress-fill{height:100%;background:var(--color-status-brand-primary);border-radius:var(--radius-4);transition:width .4s ease;width:0%;}
+.progress-pct{font-size:var(--font-size-p4);color:var(--color-text-secondary);text-align:center;}
+.import-log{max-height:200px;overflow-y:auto;background:var(--grey-50);border:var(--stroke-1) solid var(--grey-200);border-radius:var(--radius-8);padding:var(--space-12) var(--space-16);font-size:13px;font-family:monospace;color:var(--color-text-secondary);margin-top:var(--space-16);}
+.log-ok{color:var(--green-600);} .log-warn{color:var(--color-text-secondary);} .log-err{color:var(--red-500);}
+
+/* Result */
+.result-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-12);}
+.result-stat{padding:var(--space-20);border-radius:var(--radius-8);text-align:center;}
+.result-stat.ok{background:var(--green-50);border:1px solid #b5e0cc;}
+.result-stat.warn{background:var(--yellow-50);border:1px solid #f5dfa0;}
+.result-stat.fail{background:var(--red-50);border:1px solid var(--red-200);}
+.result-stat-num{font-size:36px;font-weight:700;margin-bottom:4px;}
+.result-stat.ok .result-stat-num{color:var(--green-500);}
+.result-stat.warn .result-stat-num{color:var(--color-text-secondary);}
+.result-stat.fail .result-stat-num{color:var(--red-500);}
+.result-stat-label{font-size:var(--font-size-p3);color:var(--color-text-secondary);font-weight:500;}
+.result-actions{display:flex;gap:var(--space-12);justify-content:center;flex-wrap:wrap;margin-top:var(--space-24);}
+
+/* Error report box */
+.error-report-box{background:var(--orange-50);border:var(--stroke-1) solid var(--orange-200);border-radius:var(--radius-8);padding:var(--space-20);margin-top:var(--space-20);}
+.error-report-title{font-size:var(--font-size-p2);font-weight:700;color:var(--orange-500);margin-bottom:var(--space-8);display:flex;align-items:center;gap:var(--space-8);}
+
+/* Toast — extracted from Figma node 1081:899 */
+/* bg:#e9f1f9, border-left 4px #2478c8, radius:4px, shadow: 0px 4px 4px rgba(34,34,34,0.1) */
+.toast-wrap{position:fixed;bottom:var(--space-24);right:var(--space-24);z-index:9999;display:flex;flex-direction:column;gap:var(--space-8);}
+.toast{display:flex;align-items:center;gap:var(--space-16);padding:var(--space-8) var(--space-4) var(--space-8) var(--space-16);border-radius:var(--radius-4);border-left:var(--stroke-3) solid;box-shadow:0px 4px 4px rgba(34,34,34,.1);font-size:var(--font-size-p2);min-width:280px;animation:toastin .25s ease;}
+@keyframes toastin{from{transform:translateX(120%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+.toast-info{background:var(--color-bg-information);border-color:var(--color-status-information);}
+.toast-success{background:var(--green-50);border-color:var(--green-500);}
+.toast-error{background:var(--red-50);border-color:var(--red-500);}
+.toast-close{margin-left:auto;padding:var(--space-4);cursor:pointer;color:var(--color-text-secondary);font-size:14px;}
+.toast-close:hover{color:var(--color-text-primary);}
+
+/* Misc */
+.screen{display:none;} .screen.active{display:block;}
+.hidden{display:none!important;}
+.flex{display:flex;} .items-center{align-items:center;} .gap-8{gap:var(--space-8);} .gap-12{gap:var(--space-12);}
+.justify-between{justify-content:space-between;}
+.mt-8{margin-top:var(--space-8);} .mt-16{margin-top:var(--space-16);} .mt-24{margin-top:var(--space-24);}
+.mb-16{margin-bottom:var(--space-16);} .mb-24{margin-bottom:var(--space-24);}
+.text-muted{color:var(--color-text-secondary);}
+.text-sm{font-size:var(--font-size-p3);}
+.text-center{text-align:center;}
+.info-banner{display:flex;align-items:flex-start;gap:var(--space-12);background:var(--blue-50);border:var(--stroke-1) solid var(--blue-100);border-radius:var(--radius-4);padding:var(--space-12) var(--space-16);margin-bottom:var(--space-20);font-size:var(--font-size-p3);color:var(--color-text-secondary);}
+
+/* ── INLINE EDITING — review table ── */
+.review-cell { cursor: default; position: relative; }
+.review-cell.editable { cursor: pointer; position: relative; }
+
+/* Hover state — show edit hint inline with the value */
+.review-cell.editable:hover { background: var(--grey-50); }
+.review-cell .cell-value-text { transition: opacity .1s; }
+.review-cell.editable:hover .cell-value-text { opacity: 0; }
+.review-cell .cell-edit-hint {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 16px;
+  gap: 4px;
+  color: #5e6463;
+}
+.review-cell.editable:hover .cell-edit-hint { display: flex; }
+.review-cell.editing .cell-edit-hint { display: none !important; }
+.review-cell.editing .cell-value-text { opacity: 1; }
+.review-cell .cell-display { display: block; }
+.review-cell .cell-input { display: none; }
+.review-cell.editing .cell-display { display: none; }
+.review-cell.editing .cell-input { display: block; }
+
+/* Inline input — text */
+.cell-text-input {
+  width: 100%;
+  border: 1.5px solid var(--color-status-brand-primary);
+  border-radius: var(--radius-4);
+  padding: 4px 8px;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-p2);
+  color: var(--color-text-primary);
+  outline: none;
+  background: white;
+  min-width: 120px;
+}
+.cell-text-input.error { border-color: var(--color-status-negative); }
+
+/* Inline select */
+.cell-select-input {
+  width: 100%;
+  border: 1.5px solid var(--color-status-brand-primary);
+  border-radius: var(--radius-4);
+  padding: 4px 8px;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-p2);
+  color: var(--color-text-primary);
+  background: white;
+  outline: none;
+  min-width: 120px;
+}
+/* Row states */
+tr.row-error { background: #fff5f5; border-left: 3px solid var(--color-status-negative); }
+tr.row-skip  { background: #fef5db; border-left: 3px solid var(--yellow-500); }
+tr.row-valid { background: white; }
+tr.row-fixed { background: #f0faf4; border-left: 3px solid #258750; }
+
+
+   768px = tablet, 480px = mobile
+   ============================================================ */
+
+/* ── TABLET (≤768px) ── */
+@media (max-width: 768px) {
+
+  /* Topnav — hide title label, keep logo + avatar */
+  .topnav-title { display: none; }
+  .topnav { padding: 0 var(--space-16); }
+
+  /* Wizard shell — tighter padding */
+  .wizard-shell { padding: var(--space-24) var(--space-16) 60px; }
+
+  /* Step progress — smaller circles, shorter labels */
+  .sp-step { min-width: 50px; }
+  .sp-label { font-size: var(--font-size-p4); }
+  .sp-divider { min-width: 16px; }
+
+  /* Type cards — stack to single column */
+  .type-grid { grid-template-columns: 1fr; }
+
+  /* Event grid — 2 cols */
+  .event-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Summary / result grids — 2 cols */
+  .summary-grid,
+  .result-stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Map table — horizontal scroll */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .map-table,
+  .data-table { min-width: 560px; }
+
+  /* Buttons — full width on mobile */
+  .btn { min-width: unset; width: 100%; justify-content: center; }
+  .btn-sm { width: auto; }
+
+  /* Footer buttons — stack vertically */
+  .screen-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--space-12);
+  }
+  .screen-footer .btn { width: 100%; }
+
+  /* Result actions — stack */
+  .result-actions { flex-direction: column; align-items: stretch; }
+  .result-actions .btn { width: 100%; }
+
+  /* Tabs — scrollable */
+  .tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+
+  /* Source column header on map table — shorter */
+  .source-col { font-size: var(--font-size-p3); }
+
+  /* Alert — stack icon + text */
+  .alert { flex-direction: column; gap: var(--space-8); }
+}
+
+/* ── MOBILE (≤480px) ── */
+@media (max-width: 480px) {
+
+  /* Step progress — show only active label, hide the rest */
+  .sp-label { display: none; }
+  .sp-step.active .sp-label { display: block; font-size: var(--font-size-p4); }
+  .sp-divider { min-width: 8px; }
+  .sp-circle { width: 16px; height: 16px; }
+  .sp-step.active .sp-circle::after { width: 8px; height: 8px; }
+  .sp-step.done .sp-circle::after { width: 8px; height: 5px; }
+
+  /* Progress bar margin reduced */
+  .step-progress { margin-bottom: 32px; }
+
+  /* Type cards — full width single column */
+  .type-grid { grid-template-columns: 1fr; gap: var(--space-12); }
+  .type-card { padding: var(--space-16); }
+
+  /* Event grid — single column */
+  .event-grid { grid-template-columns: 1fr; }
+
+  /* Grids — single column */
+  .summary-grid,
+  .result-stat-grid { grid-template-columns: 1fr; }
+
+  /* Headings scale down */
+  .screen-title { font-size: 20px; }
+  .screen-desc { font-size: var(--font-size-p3); }
+
+  /* Topnav avatar — smaller */
+  .avatar-lg { width: 32px; height: 32px; font-size: var(--font-size-p3); }
+
+  /* File upload zone — smaller min height */
+  .file-upload-zone { min-height: 140px; padding: var(--space-24); }
+
+  /* Map table — tighter */
+  .map-table th, .map-table td { padding: var(--space-8) var(--space-12); }
+
+  /* Toast — full width */
+  .toast-container { left: var(--space-16); right: var(--space-16); bottom: var(--space-16); }
+  .toast { min-width: unset; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand">
+    <svg viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#08a6a0"/>
+      <path d="M8 16h4l3-6 4 12 3-8 3 4h5" stroke="var(--color-bg-default)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Eventeny
+  </div>
+  <div class="flex items-center gap-12">
+    <span class="text-sm text-muted" class="topnav-title">Data Migration Wizard</span>
+    <div class="avatar">JD</div>
+  </div>
+</nav>
+
+<main class="wizard-shell">
+
+  <!-- STEP PROGRESS — exact Figma structure
+       Container: flex flex-wrap gap-[0_4px] h-[56px]
+       Steps: flex-col gap-[4px] h-[56px] items-center min-w-[70px]
+       Dividers: flex-col h-[28px] justify-center w-[100px]
+       Labels: absolute top-[32px] left-[35px] -translate-x-1/2
+  -->
+  <div class="step-progress">
+    <div class="sp-step active" id="sp-1">
+      <div class="sp-icon"><div class="sp-circle"></div></div>
+      <div class="sp-label">Choose type</div>
+    </div>
+    <div class="sp-divider" id="sd-1"><div class="sp-divider-line"></div></div>
+    <div class="sp-step" id="sp-2">
+      <div class="sp-icon"><div class="sp-circle"></div></div>
+      <div class="sp-label">Upload file</div>
+    </div>
+    <div class="sp-divider" id="sd-2"><div class="sp-divider-line"></div></div>
+    <div class="sp-step" id="sp-3">
+      <div class="sp-icon"><div class="sp-circle"></div></div>
+      <div class="sp-label">Map columns</div>
+    </div>
+    <div class="sp-divider" id="sd-3"><div class="sp-divider-line"></div></div>
+    <div class="sp-step" id="sp-4">
+      <div class="sp-icon"><div class="sp-circle"></div></div>
+      <div class="sp-label">Review data</div>
+    </div>
+    <div class="sp-divider" id="sd-4"><div class="sp-divider-line"></div></div>
+    <div class="sp-step" id="sp-5">
+      <div class="sp-icon"><div class="sp-circle"></div></div>
+      <div class="sp-label">Import</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STEP 1 — CHOOSE FILE TYPE -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="screen active" id="screen-1">
+    <div class="card">
+      <div class="mb-24">
+        <h1 class="card-title">What would you like to import?</h1>
+        <p class="card-desc">Select an import type. For this release, we support Vendor Lists and Ticket Lists. Run this wizard once per file — come back to import more.</p>
+      </div>
+
+      <div class="type-grid">
+        <div class="type-card" id="type-vendor" onclick="selectType('vendor')">
+          <div class="type-icon" style="background:var(--teal-50);color:var(--color-status-brand-primary);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+          <div>
+            <div class="type-title">Vendor List</div>
+            <div class="type-desc">Artists, vendors, and exhibitors with application details, contact info, and tags.</div>
+          </div>
+          <div class="chip-row">
+            <span class="tag-secondary">Application title</span>
+            <span class="tag-secondary">Status</span>
+            <span class="tag-secondary">Business name</span>
+            <span class="tag-secondary">First name</span>
+            <span class="tag-secondary">Last name</span>
+            <span class="tag-secondary">Email</span>
+            <span class="tag-secondary">Address</span>
+            <span class="tag-secondary">Phone</span>
+            <span class="tag-secondary">Website</span>
+            <span class="tag-secondary">Tags</span>
+            <span class="tag-secondary">Notes</span>
+            <span class="tag-secondary">Logo URL</span>
+            <span class="tag-secondary">Social links</span>
+          </div>
+        </div>
+
+        <div class="type-card" id="type-ticket" onclick="selectType('ticket')">
+          <div class="type-icon" style="background:var(--blue-50);color:var(--color-status-information);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div>
+          <div>
+            <div class="type-title">Ticket List</div>
+            <div class="type-desc">Ticket buyers and attendees with order details and contact information.</div>
+          </div>
+          <div class="chip-row">
+            <span class="tag-secondary">First name</span>
+            <span class="tag-secondary">Last name</span>
+            <span class="tag-secondary">Email</span>
+            <span class="tag-secondary">Ticket type</span>
+            <span class="tag-secondary">Order ID</span>
+            <span class="tag-secondary">Phone</span>
+            <span class="tag-secondary">Purchase date</span>
+            <span class="tag-secondary">Check-in status</span>
+            <span class="tag-secondary">Notes</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESTINATION -->
+      <div class="event-section hidden" id="eventSection">
+        <div class="section-title">Where should this data go?</div>
+        <div class="section-desc">Select an event, or save to the Global Repository to assign data to events later.</div>
+
+        <div class="global-repo-opt selected" id="dest-global" onclick="selectDest('global')">
+          <div class="repo-icon" style="color:var(--color-text-secondary);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="12" width="20" height="8" rx="2"/><path d="M2 12l4-8h12l4 8"/></svg></div>
+          <div>
+            <div class="repo-title">Global Repository</div>
+            <div class="repo-desc">No event attached — assign vendors or tickets to events after import.</div>
+          </div>
+        </div>
+
+        <div class="section-title mb-16" style="margin-bottom:10px;">Or pick an existing event</div>
+        <div class="event-grid">
+          <div class="event-card" id="dest-EVT001" onclick="selectDest('EVT001')">
+            <div class="ev-id">EVT-2025-001</div>
+            <div class="ev-name">Spring Craft Fair</div>
+            <div class="ev-date">Apr 12–14, 2025</div>
+          </div>
+          <div class="event-card" id="dest-EVT002" onclick="selectDest('EVT002')">
+            <div class="ev-id">EVT-2025-002</div>
+            <div class="ev-name">Summer Art Market</div>
+            <div class="ev-date">Jul 19–21, 2025</div>
+          </div>
+          <div class="event-card" id="dest-EVT003" onclick="selectDest('EVT003')">
+            <div class="ev-id">EVT-2025-003</div>
+            <div class="ev-name">Holiday Makers Expo</div>
+            <div class="ev-date">Dec 6–8, 2025</div>
+          </div>
+          <div class="event-card" id="dest-EVT004" onclick="selectDest('EVT004')">
+            <div class="ev-id">EVT-2025-004</div>
+            <div class="ev-name">Food & Wine Festival</div>
+            <div class="ev-date">Sep 5–7, 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <span class="text-sm text-muted">Choose a type to continue</span>
+        <button class="btn btn-primary btn-md" id="s1next" disabled onclick="goTo(2)"><span>Continue</span><span class="btn-icon-el">→</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STEP 2 — UPLOAD FILE -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-2">
+    <div class="card">
+      <div class="mb-24">
+        <h1 class="card-title" id="uploadTitle">Upload your vendor list</h1>
+        <p class="card-desc">One file per session — CSV, XLS, or XLSX. Max 20 MB and 100 rows. We validate the file before moving on.</p>
+      </div>
+
+      <div id="uploadErrArea"></div>
+
+      <!-- File upload zone — from Figma FileUpload/Primary/Default -->
+      <div class="file-upload-zone" id="dropzone"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)">
+        <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" onchange="handleFileSelect(event)">
+        <div style="margin-bottom:var(--space-12);color:var(--color-border-default);" id="dzEmoji"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+        <!-- "Select files" — P3/SemiBold, color: link #0389a0 -->
+        <div class="file-upload-select" id="dzSelect">Select files</div>
+        <!-- helper text — P4/Regular, #5e6463 -->
+        <div class="file-upload-info mt-8" id="dzInfo">
+          Accepted file types: CSV, XLS, or XLSX<br>
+          Less than 20 MB · Max 100 rows
+        </div>
+      </div>
+
+      <div id="fileCardArea"></div>
+
+      <div class="alert alert-info mt-24">
+        <div class="alert-inner">
+          <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg></span>
+          <div>
+            <span class="alert-title">Need a template? </span>
+            <a href="#" onclick="toast('Vendor template downloaded','success');return false;">Download the vendor import template</a> — required fields are marked in the first row.
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <button class="btn btn-tertiary btn-md" onclick="goTo(1)"><span class="btn-icon-el">←</span><span>Back</span></button>
+        <button class="btn btn-primary btn-md" id="s2next" disabled onclick="goTo(3)"><span>Map columns</span><span class="btn-icon-el">→</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STEP 3 — MAP COLUMNS -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-3">
+    <div class="card">
+      <div class="mb-24">
+        <h1 class="card-title">Map your columns</h1>
+        <p class="card-desc">Match each column from your file to the right Eventeny field. We've auto-matched what we can — review and adjust anything that looks off.</p>
+      </div>
+
+      <div class="alert alert-info">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div>Auto-matched <strong id="autoCount">0</strong> of <strong id="totalCount">0</strong> columns based on your file headers. Required fields are highlighted — make sure they're all mapped.</div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="map-table">
+          <thead>
+            <tr>
+              <th>Your column <span style="color:var(--color-status-negative);font-weight:600;font-size:var(--font-size-p3);">* required</span></th>
+              <th>Sample value</th>
+              <th style="text-align:center;width:24px;">→</th>
+              <th>Eventeny field</th>
+              <th>Match</th>
+            </tr>
+          </thead>
+          <tbody id="mapBody"></tbody>
+        </table>
+      </div>
+
+      <div class="wizard-footer">
+        <button class="btn btn-tertiary btn-md" onclick="goTo(2)"><span class="btn-icon-el">←</span><span>Back</span></button>
+        <button class="btn btn-primary btn-md" onclick="goTo(4)"><span>Preview data</span><span class="btn-icon-el">→</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STEP 4 — REVIEW DATA -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-4">
+    <div class="card">
+      <div class="mb-24">
+        <h1 class="card-title screen-title">Review your data</h1>
+        <p class="card-desc screen-desc">Errors and flagged rows are shown first. Double-click any cell to edit. Fix issues inline before importing.</p>
+      </div>
+
+      <!-- Inline summary — compact, in the filter bar -->
+
+      <!-- Filter bar + compact stats -->
+      <div style="display:flex;align-items:center;gap:var(--space-8);margin-bottom:var(--space-16);flex-wrap:wrap;">
+        <span style="font-size:var(--font-size-p3);color:var(--color-text-secondary);">Show:</span>
+        <button class="seg-item selected" onclick="filterRows('all',this)">All</button>
+        <button class="seg-item" onclick="filterRows('error',this)">Errors only</button>
+        <button class="seg-item" onclick="filterRows('valid',this)">Valid only</button>
+        <div style="margin-left:auto;display:flex;gap:var(--space-16);font-size:var(--font-size-p3);">
+          <span style="color:var(--color-text-secondary);"><span id="r4-showing">0</span> of <span id="r4-total">0</span> shown</span>
+          <span style="color:var(--color-status-negative);font-weight:600;"><span id="r4-err">0</span> errors</span>
+          <span style="color:var(--color-text-secondary);"><span id="r4-skip">0</span> skipped</span>
+          <span style="color:#258750;font-weight:600;"><span id="r4-valid">0</span> ready</span>
+        </div>
+      </div>
+
+      <!-- Unified table — flagged rows first -->
+      <div class="table-wrap">
+        <table class="data-table" id="reviewTable">
+          <thead>
+            <tr>
+              <th style="width:40px;">#</th>
+              <th>Application title</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Business name</th>
+              <th>Tags</th>
+              <th style="width:80px;">Row status</th>
+            </tr>
+          </thead>
+          <tbody id="reviewBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Tags note -->
+      <div class="alert alert-info hidden" id="tagsBox" style="margin-top:var(--space-16);">
+        <div class="alert-inner">
+          <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg></span>
+          <div>Tags (<span id="tagsList"></span>) will be created in your Global Repository and available across all events.</div>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <button class="btn btn-tertiary btn-md" onclick="goTo(3)"><span class="btn-icon-el">←</span><span>Back to mapping</span></button>
+        <div style="display:flex;gap:var(--space-12);align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-secondary btn-md" onclick="goTo(2)"><span>Re-upload fixed file</span></button>
+          <button class="btn btn-primary btn-md" onclick="startImport()"><span>Import <span id="importLabel">0</span> rows</span><span class="btn-icon-el">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STEP 5 — IMPORT + RESULTS -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="screen" id="screen-5">
+    <div class="card">
+      <div class="card-header text-center">
+        <h1 class="card-title" id="importTitle" style="text-align:center;">Importing your data…</h1>
+        <p class="card-desc" id="importDesc" style="text-align:center;">This usually takes less than a minute. Don't close this tab.</p>
+      </div>
+
+      <!-- Progress — from Figma ProgressBar (track:#d8dbdb, fill:#038580, h:8px, radius:4px) -->
+      <div style="text-align:center;padding:var(--space-16) 0;">
+        <div style="margin-bottom:var(--space-16);color:var(--color-text-secondary);" id="importEmoji"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14M5 2h14M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22M7 2v4.172a2 2 0 0 1 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div>
+        <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+        <div class="progress-pct" id="pPct">0%</div>
+      </div>
+
+      <!-- Import log -->
+      <div class="import-log" id="importLog">
+        <div>▶ Starting migration job…</div>
+      </div>
+
+      <!-- Results (shown after import) -->
+      <div class="hidden" id="resultsArea">
+        <div class="divider"></div>
+        <div style="text-align:center;padding:var(--space-32) 0 var(--space-24);">
+          <div style="margin-bottom:var(--space-16);" id="resultEmoji"><span style="display:inline-flex;width:64px;height:64px;border-radius:50%;background:var(--teal-50);align-items:center;justify-content:center;color:var(--color-status-brand-primary);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+          <h2 style="font-size:28px;font-weight:700;margin-bottom:var(--space-8);" id="resultTitle">Import complete</h2>
+          <p class="text-muted" id="resultSub">Your vendor data is now in Eventeny.</p>
+        </div>
+
+        <div class="summary-grid">
+          <div class="summary-card valid"><div class="summary-count" id="r-imp">6</div><div class="summary-label">Imported</div></div>
+          <div class="summary-card skipped"><div class="summary-count" id="r-skip">1</div><div class="summary-label">Skipped (duplicates)</div></div>
+          <div class="summary-card invalid"><div class="summary-count" id="r-fail">0</div><div class="summary-label">Failed</div></div>
+        </div>
+
+        <div class="alert alert-warning hidden" id="errReportBox" style="margin-top:var(--space-24);">
+          <div class="alert-title" style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg> Some rows failed to import</div>
+          <p class="text-sm text-muted mb-16">Download the error report to see what went wrong, fix those rows, and run another import.</p>
+          <button class="btn btn-secondary btn-sm" onclick="toast('Error report downloaded','info')"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Download error report CSV</span></button>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary btn-md" onclick="resetWizard()"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span><span>Import more data</span></button>
+          <button class="btn btn-secondary btn-md" onclick="toast('Opening vendors…','info')"><span>View imported vendors</span><span class="btn-icon-el">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast-container" id="toastWrap"></div>
+
+<script>
+/* ── STATE ── */
+const S = { step:1, type:null, dest:'global', file:null };
+
+/* ── MOCK DATA ── */
+const vendorCols = [
+  {src:'Application title', sample:'Artist application',         field:'application_title', req:true},
+  {src:'Status',            sample:'Approved',                   field:'status',            req:true},
+  {src:'Business name',     sample:'Acme Company',               field:'business_name',     req:true},
+  {src:'First name',        sample:'Jane',                       field:'first_name',        req:true},
+  {src:'Last name',         sample:'Smith',                      field:'last_name',         req:true},
+  {src:'Email',             sample:'jane@example.com',           field:'email',             req:true},
+  {src:'Street address 1',  sample:'221B Baker St',              field:'street_address_1',  req:false},
+  {src:'Street address 2',  sample:'Apt B',                      field:'street_address_2',  req:false},
+  {src:'City',              sample:'Atlanta',                    field:'city',              req:false},
+  {src:'State',             sample:'Georgia',                    field:'state',             req:false},
+  {src:'Zip code',          sample:'30010',                      field:'zip_code',          req:false},
+  {src:'Country',           sample:'United States',              field:'country',           req:false},
+  {src:'Phone',             sample:'123-456-7890',               field:'phone',             req:false},
+  {src:'Website',           sample:'https://url.com',            field:'website',           req:false},
+  {src:'Facebook Link',     sample:'https://fb.com/acme',        field:'facebook',          req:false},
+  {src:'Instagram Link',    sample:'https://ig.com/acme',        field:'instagram',         req:false},
+  {src:'Twitter Link',      sample:'https://x.com/acme',         field:'twitter',           req:false},
+  {src:'Special request',   sample:'Corner booth preferred',     field:'special_request',   req:false},
+  {src:'Logo URL',          sample:'https://eventeny.com/logo',  field:'logo_url',          req:false},
+  {src:'Notes',             sample:'May be late | Needs help',   field:'notes',             req:false},
+  {src:'Tags',              sample:'VIP, Needs assistance',      field:'tags',              req:false},
+];
+const ticketCols = [
+  {src:'First name',      sample:'Michael',                    field:'first_name',     req:true},
+  {src:'Last name',       sample:'Johnson',                    field:'last_name',      req:true},
+  {src:'Email',           sample:'m.johnson@example.com',      field:'email',          req:true},
+  {src:'Ticket type',     sample:'General Admission',          field:'ticket_type',    req:true},
+  {src:'Order ID',        sample:'ORD-20250312-001',           field:'order_id',       req:true},
+  {src:'Phone',           sample:'404-555-0192',               field:'phone',          req:false},
+  {src:'Purchase date',   sample:'2025-03-12',                 field:'purchase_date',  req:false},
+  {src:'Check-in status', sample:'Not checked in',             field:'checkin_status', req:false},
+  {src:'Notes',           sample:'Wheelchair accessible',      field:'notes',          req:false},
+];
+
+const vendorOpts = [
+  {v:'',label:'— Skip this column —'},
+  {v:'application_title',label:'Application title *'},
+  {v:'status',label:'Status *'},
+  {v:'business_name',label:'Business name *'},
+  {v:'first_name',label:'First name *'},
+  {v:'last_name',label:'Last name *'},
+  {v:'email',label:'Email *'},
+  {v:'street_address_1',label:'Street address 1'},
+  {v:'street_address_2',label:'Street address 2'},
+  {v:'city',label:'City'},{v:'state',label:'State'},
+  {v:'zip_code',label:'Zip code'},{v:'country',label:'Country'},
+  {v:'phone',label:'Phone'},{v:'website',label:'Website'},
+  {v:'facebook',label:'Facebook Link'},{v:'instagram',label:'Instagram Link'},
+  {v:'twitter',label:'Twitter Link'},{v:'special_request',label:'Special request'},
+  {v:'logo_url',label:'Logo URL'},{v:'notes',label:'Notes'},{v:'tags',label:'Tags'},
+];
+const ticketOpts = [
+  {v:'',label:'— Skip this column —'},
+  {v:'first_name',label:'First name *'},{v:'last_name',label:'Last name *'},
+  {v:'email',label:'Email *'},{v:'ticket_type',label:'Ticket type *'},
+  {v:'order_id',label:'Order ID *'},{v:'phone',label:'Phone'},
+  {v:'purchase_date',label:'Purchase date'},{v:'checkin_status',label:'Check-in status'},
+  {v:'notes',label:'Notes'},
+];
+
+const VALID_STATUSES = ['Approved','Awaiting Decision','Rejected','Waitlisted','Withdrawn'];
+const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+const statusClass = {Approved:'approved','Awaiting Decision':'awaiting',Rejected:'rejected',Waitlisted:'waitlisted',Withdrawn:'withdrawn'};
+
+// All 60 rows — errors first, then skipped, then valid
+// Each row: {row, app, status, biz, firstName, lastName, email, addr1, city, state, zip, tags, _errors:[{field,type,msg}], _skip:bool}
+const allRows = [
+  // ── ERRORS (rows with invalid/missing data) ──
+  {row:1, app:'Application title extra long text here', status:'Approved',       biz:'Horizon Arts',      firstName:'Jane',    lastName:'',        email:'janesjones@gmail.com',        addr1:'221B Baker Street',          city:'Atlanta',  state:'Georgia',   zip:'30301', tags:'VIP',
+   _errors:[{field:'lastName',type:'missing',msg:'Last name is required'}]},
+  {row:2, app:'Lorem Ipsum',                           status:'Approved',       biz:'Paper & Pine',      firstName:'John',    lastName:'Smith',   email:'michaelbrown@yahoo.com',      addr1:'12 Grimmauld Place',         city:'Atlanta',  state:'Georgia',   zip:'30302', tags:'',
+   _errors:[{field:'app',type:'format',msg:'Application title cannot be "Lorem Ipsum"'}]},
+  {row:5, app:'Application title 4',                   status:'Approved',       biz:'SunBurst Co',       firstName:'Mary',    lastName:'Brown',   email:'laurawilliams@gmailcoo',      addr1:'12th Street',                city:'Phoenix',  state:'AR',        zip:'85001', tags:'',
+   _errors:[{field:'email',type:'format',msg:'Invalid email format'},{field:'state',type:'invalid',msg:'"AR" is not a valid state name — did you mean Arkansas?'}]},
+  {row:9, app:'Application title 8',                   status:'Approved',       biz:'Dalabra Inc',       firstName:'Emma',    lastName:'Moore',   email:'patriciathomas@gmail.com',    addr1:'6 Hobbiton',                 city:'Dalabra',  state:'DE',        zip:'19901', tags:'',
+   _errors:[{field:'city',type:'invalid',msg:'"Dalabra" is not a recognized city'}]},
+  {row:18,app:'Application title 17',                  status:'Pending',        biz:'Craft Hive',        firstName:'Lucas',   lastName:'Scott',   email:'lucas@crafthive.com',         addr1:'1 Penny Lane',               city:'Boston',   state:'Massachusetts', zip:'02101', tags:'Featured',
+   _errors:[{field:'status',type:'invalid',msg:'"Pending" is not valid. Choose: Approved, Awaiting Decision, Rejected, Waitlisted, Withdrawn'}]},
+  {row:23,app:'Application title 22',                  status:'Approved',       biz:'',                  firstName:'Nina',    lastName:'Foster',  email:'nina@foster.com',             addr1:'7 Cloud Nine',               city:'Denver',   state:'Colorado',  zip:'80201', tags:'',
+   _errors:[{field:'biz',type:'missing',msg:'Business name is required'}]},
+  {row:31,app:'Application title 30',                  status:'Approved',       biz:'Blue Dot Studio',   firstName:'',        lastName:'Park',    email:'',                            addr1:'99 Elm Street',              city:'Seattle',  state:'Washington',zip:'98101', tags:'',
+   _errors:[{field:'firstName',type:'missing',msg:'First name is required'},{field:'email',type:'missing',msg:'Email is required'}]},
+  {row:45,app:'Application title 44',                  status:'unknown status', biz:'Pixel Brush',       firstName:'Aiden',   lastName:'Clark',   email:'aiden@pixelbrush.net',        addr1:'42 Galaxy Drive',            city:'Austin',   state:'Texas',     zip:'73301', tags:'',
+   _errors:[{field:'status',type:'invalid',msg:'"unknown status" is not a valid status value'}]},
+
+  // ── SKIPPED (duplicates) ──
+  {row:11,app:'Application title 10',                  status:'Approved',       biz:'Already There LLC', firstName:'Olivia',  lastName:'Anderson',email:'duplicate@example.com',       addr1:'1 Infinite Loop',            city:'Atlanta',  state:'Georgia',   zip:'30303', tags:'', _skip:true, _skipReason:'Email already exists in Eventeny'},
+  {row:22,app:'Application title 21',                  status:'Awaiting Decision',biz:'Twin Peaks Co',   firstName:'Mia',     lastName:'Young',   email:'mia.young@example.com',       addr1:'2 Twin Peaks Blvd',          city:'Portland', state:'Oregon',    zip:'97201', tags:'', _skip:true, _skipReason:'Email already exists in Eventeny'},
+
+  // ── VALID (clean rows) ──
+  {row:3, app:'Application title 2',  status:'Approved',          biz:'Prism Gallery',     firstName:'Alice',   lastName:'Johnson',  email:'sarahsmith@hotmail.com',     addr1:'4 Privet Drive',             city:'Atlanta',  state:'Georgia',   zip:'30304', tags:'Featured'},
+  {row:4, app:'Application title 3',  status:'Approved',          biz:'Terracotta Works',  firstName:'Bob',     lastName:'Williams', email:'davidjohnson@outlook.com',   addr1:'742 Evergreen Terrace',      city:'Atlanta',  state:'Georgia',   zip:'30305', tags:''},
+  {row:6, app:'Application title 5',  status:'Awaiting Decision', biz:'Glass & Grain',     firstName:'Michael', lastName:'Davis',    email:'robertgarcia@live.com',      addr1:'6 Wisteria Lane',            city:'Atlanta',  state:'Georgia',   zip:'30306', tags:'VIP'},
+  {row:7, app:'Application title 6',  status:'Approved',          biz:'Loom & Thread',     firstName:'Sara',    lastName:'Miller',   email:'emilymartinez@icloud.com',   addr1:'7 Rue de Vaugirard',         city:'Atlanta',  state:'Georgia',   zip:'30307', tags:''},
+  {row:8, app:'Application title 7',  status:'Rejected',          biz:'Clay & Kiln',       firstName:'David',   lastName:'Wilson',   email:'jamesanderson@yahoo.com',    addr1:'31 Spooner Street',          city:'Atlanta',  state:'Georgia',   zip:'30308', tags:''},
+  {row:10,app:'Application title 9',  status:'Approved',          biz:'Inkwell Studio',    firstName:'Chris',   lastName:'Taylor',   email:'johnharris@hotmail.com',     addr1:'9 3/4 Platform',             city:'Atlanta',  state:'Georgia',   zip:'30309', tags:'Featured'},
+  {row:12,app:'Application title 11', status:'Approved',          biz:'Copper & Oak',      firstName:'Daniel',  lastName:'Thomas',   email:'lisawilson@gmail.com',       addr1:'1600 Pennsylvania Ave',      city:'Atlanta',  state:'Georgia',   zip:'30310', tags:''},
+  {row:13,app:'Application title 12', status:'Waitlisted',        biz:'Velvet Canvas',     firstName:'Sophia',  lastName:'Jackson',  email:'kevinsmith@live.com',        addr1:'2 Baker Street',             city:'Atlanta',  state:'Georgia',   zip:'30311', tags:'Needs assistance'},
+  {row:14,app:'Application title 13', status:'Approved',          biz:'Stone & Stem',      firstName:'James',   lastName:'White',    email:'amandajones@yahoo.com',      addr1:'88 Rue du Faubourg',         city:'Atlanta',  state:'Georgia',   zip:'30312', tags:''},
+  {row:15,app:'Application title 14', status:'Approved',          biz:'Harbor Lights Co',  firstName:'Liam',    lastName:'Harris',   email:'charleslee@hotmail.com',     addr1:'1138 Mockingbird Lane',      city:'Atlanta',  state:'Georgia',   zip:'30313', tags:'VIP'},
+  {row:16,app:'Application title 15', status:'Awaiting Decision', biz:'Mosaic Studio',     firstName:'Jack',    lastName:'Martin',   email:'isabellaevans@icloud.com',   addr1:'3 Dagobah System',           city:'Atlanta',  state:'Georgia',   zip:'30314', tags:''},
+  {row:17,app:'Application title 16', status:'Approved',          biz:'Ember & Ash',       firstName:'Jason',   lastName:'Thompson', email:'markturner@yahoo.com',       addr1:'4 7th Avenue',               city:'Atlanta',  state:'Georgia',   zip:'30315', tags:'Featured'},
+  {row:19,app:'Application title 18', status:'Approved',          biz:'Birch & Bloom',     firstName:'Ethan',   lastName:'Hall',     email:'ethan@birchbloom.com',       addr1:'5 Downing Street',           city:'Nashville', state:'Tennessee',zip:'37201', tags:''},
+  {row:20,app:'Application title 19', status:'Approved',          biz:'Tide & Timber',     firstName:'Chloe',   lastName:'Adams',    email:'chloe@tidetimber.com',       addr1:'10 Sesame Street',           city:'Miami',    state:'Florida',   zip:'33101', tags:'VIP'},
+  {row:21,app:'Application title 20', status:'Waitlisted',        biz:'Fern & Folk',       firstName:'Ryan',    lastName:'Nelson',   email:'ryan@fernfolk.com',          addr1:'1 Victory Lane',             city:'Chicago',  state:'Illinois',  zip:'60601', tags:'Needs assistance'},
+  {row:24,app:'Application title 23', status:'Approved',          biz:'Wild & Woven',      firstName:'Zoe',     lastName:'Baker',    email:'zoe@wildwoven.com',          addr1:'3 Maple Avenue',             city:'Brooklyn', state:'New York',  zip:'11201', tags:'Featured'},
+  {row:25,app:'Application title 24', status:'Approved',          biz:'Slate & Stone',     firstName:'Owen',    lastName:'Carter',   email:'owen@slatestone.com',        addr1:'7 Oak Street',               city:'Denver',   state:'Colorado',  zip:'80202', tags:''},
+  {row:26,app:'Application title 25', status:'Approved',          biz:'Plum & Petal',      firstName:'Lily',    lastName:'Mitchell', email:'lily@plumpetal.com',         addr1:'9 Rose Lane',                city:'Portland', state:'Oregon',    zip:'97202', tags:'VIP'},
+  {row:27,app:'Application title 26', status:'Awaiting Decision', biz:'Rust & Rafter',     firstName:'Noah',    lastName:'Perez',    email:'noah@rustrafter.com',        addr1:'14 Birch Blvd',              city:'Austin',   state:'Texas',     zip:'73302', tags:''},
+  {row:28,app:'Application title 27', status:'Approved',          biz:'Grain & Glass',     firstName:'Ava',     lastName:'Roberts',  email:'ava@grainglass.com',         addr1:'21 Spruce Street',           city:'Seattle',  state:'Washington',zip:'98102', tags:'Featured'},
+  {row:29,app:'Application title 28', status:'Approved',          biz:'Forge & Fig',       firstName:'Elijah',  lastName:'Turner',   email:'elijah@forgefig.com',        addr1:'6 Willow Way',               city:'Phoenix',  state:'Arizona',   zip:'85002', tags:''},
+  {row:30,app:'Application title 29', status:'Rejected',          biz:'Dusk & Dawn',       firstName:'Isabella',lastName:'Phillips', email:'isabella@duskdawn.com',      addr1:'33 Cedar Lane',              city:'Atlanta',  state:'Georgia',   zip:'30316', tags:''},
+  {row:32,app:'Application title 31', status:'Approved',          biz:'Mint & Marble',     firstName:'Mason',   lastName:'Campbell', email:'mason@mintmarble.com',       addr1:'8 Elm Court',                city:'Boston',   state:'Massachusetts',zip:'02102',tags:'VIP'},
+  {row:33,app:'Application title 32', status:'Approved',          biz:'Parch & Pine',      firstName:'Ella',    lastName:'Evans',    email:'ella@parchpine.com',         addr1:'17 Ash Street',              city:'Atlanta',  state:'Georgia',   zip:'30317', tags:''},
+  {row:34,app:'Application title 33', status:'Awaiting Decision', biz:'Knot & Needle',     firstName:'Logan',   lastName:'Edwards',  email:'logan@knotneedle.com',       addr1:'4 Poplar Place',             city:'Atlanta',  state:'Georgia',   zip:'30318', tags:'Needs assistance'},
+  {row:35,app:'Application title 34', status:'Approved',          biz:'Amber & Ore',       firstName:'Harper',  lastName:'Collins',  email:'harper@ambreore.com',        addr1:'55 Walnut Way',              city:'Atlanta',  state:'Georgia',   zip:'30319', tags:''},
+  {row:36,app:'Application title 35', status:'Approved',          biz:'Bloom & Brine',     firstName:'Jackson', lastName:'Stewart',  email:'jackson@bloombrine.com',     addr1:'12 Magnolia Ave',            city:'Atlanta',  state:'Georgia',   zip:'30320', tags:'Featured'},
+  {row:37,app:'Application title 36', status:'Approved',          biz:'Dew & Draft',       firstName:'Avery',   lastName:'Sanchez',  email:'avery@dewdraft.com',         addr1:'3 Cypress Court',            city:'Atlanta',  state:'Georgia',   zip:'30321', tags:''},
+  {row:38,app:'Application title 37', status:'Waitlisted',        biz:'Husk & Honey',      firstName:'Sofia',   lastName:'Morris',   email:'sofia@huskhoney.com',        addr1:'7 Laurel Lane',              city:'Atlanta',  state:'Georgia',   zip:'30322', tags:'VIP'},
+  {row:39,app:'Application title 38', status:'Approved',          biz:'Crest & Craft',     firstName:'Carter',  lastName:'Rogers',   email:'carter@crestcraft.com',      addr1:'9 Ivy Street',               city:'Atlanta',  state:'Georgia',   zip:'30323', tags:''},
+  {row:40,app:'Application title 39', status:'Approved',          biz:'Flax & Flame',      firstName:'Mila',    lastName:'Reed',     email:'mila@flaxflame.com',         addr1:'21 Juniper Blvd',            city:'Atlanta',  state:'Georgia',   zip:'30324', tags:''},
+  {row:41,app:'Application title 40', status:'Approved',          biz:'Knoll & Kiln',      firstName:'Sebastian',lastName:'Cook',   email:'sebastian@knollkiln.com',    addr1:'6 Hemlock Hill',             city:'Atlanta',  state:'Georgia',   zip:'30325', tags:'Featured'},
+  {row:42,app:'Application title 41', status:'Awaiting Decision', biz:'Salt & Slate',      firstName:'Penelope',lastName:'Morgan',  email:'penelope@saltslate.com',     addr1:'14 Aspen Ave',               city:'Atlanta',  state:'Georgia',   zip:'30326', tags:''},
+  {row:43,app:'Application title 42', status:'Approved',          biz:'Peak & Pith',       firstName:'Julian',  lastName:'Bell',     email:'julian@peakpith.com',        addr1:'3 Chestnut Close',           city:'Atlanta',  state:'Georgia',   zip:'30327', tags:'VIP'},
+  {row:44,app:'Application title 43', status:'Approved',          biz:'Weld & Wax',        firstName:'Riley',   lastName:'Murphy',   email:'riley@weldwax.com',          addr1:'8 Sycamore Street',          city:'Atlanta',  state:'Georgia',   zip:'30328', tags:''},
+  {row:46,app:'Application title 45', status:'Approved',          biz:'Char & Chalk',      firstName:'Nora',    lastName:'Bailey',   email:'nora@charchalk.com',         addr1:'5 Fir Street',               city:'Atlanta',  state:'Georgia',   zip:'30329', tags:''},
+  {row:47,app:'Application title 46', status:'Rejected',          biz:'Briar & Beam',      firstName:'Hunter',  lastName:'Rivera',   email:'hunter@briarBeam.com',       addr1:'11 Spruce Lane',             city:'Atlanta',  state:'Georgia',   zip:'30330', tags:''},
+  {row:48,app:'Application title 47', status:'Approved',          biz:'Ore & Oak',         firstName:'Zoey',    lastName:'Cooper',   email:'zoey@oreoak.com',            addr1:'19 Hickory Heights',         city:'Atlanta',  state:'Georgia',   zip:'30331', tags:'Featured'},
+  {row:49,app:'Application title 48', status:'Awaiting Decision', biz:'Gravel & Grace',    firstName:'Levi',    lastName:'Richardson',email:'levi@gravelgrace.com',      addr1:'2 Birch Court',              city:'Atlanta',  state:'Georgia',   zip:'30332', tags:''},
+  {row:50,app:'Application title 49', status:'Approved',          biz:'Pitch & Plume',     firstName:'Hannah',  lastName:'Cox',      email:'hannah@pitchplume.com',      addr1:'4 Elm End',                  city:'Atlanta',  state:'Georgia',   zip:'30333', tags:'VIP'},
+  {row:51,app:'Application title 50', status:'Approved',          biz:'Flint & Frond',     firstName:'Caleb',   lastName:'Howard',   email:'caleb@flintfrond.com',       addr1:'7 Oak Close',                city:'Atlanta',  state:'Georgia',   zip:'30334', tags:''},
+  {row:52,app:'Application title 51', status:'Approved',          biz:'Loam & Light',      firstName:'Addison', lastName:'Ward',     email:'addison@loamlight.com',      addr1:'3 Cedar End',                city:'Atlanta',  state:'Georgia',   zip:'30335', tags:''},
+  {row:53,app:'Application title 52', status:'Waitlisted',        biz:'Thorn & Thatch',    firstName:'Brooklyn',lastName:'Torres',   email:'brooklyn@thornthatch.com',   addr1:'9 Maple Mews',               city:'Atlanta',  state:'Georgia',   zip:'30336', tags:'Needs assistance'},
+  {row:54,app:'Application title 53', status:'Approved',          biz:'Cinder & Clay',     firstName:'Eli',     lastName:'Peterson', email:'eli@cinderclay.com',         addr1:'5 Willow Walk',              city:'Atlanta',  state:'Georgia',   zip:'30337', tags:''},
+  {row:55,app:'Application title 54', status:'Approved',          biz:'Drift & Dye',       firstName:'Natalie', lastName:'Gray',     email:'natalie@driftdye.com',       addr1:'15 Poplar Park',             city:'Atlanta',  state:'Georgia',   zip:'30338', tags:'Featured'},
+  {row:56,app:'Application title 55', status:'Approved',          biz:'Brick & Bloom',     firstName:'Evan',    lastName:'Ramirez',  email:'evan@brickbloom.com',        addr1:'6 Ash Alley',                city:'Atlanta',  state:'Georgia',   zip:'30339', tags:''},
+  {row:57,app:'Application title 56', status:'Awaiting Decision', biz:'Grit & Gold',       firstName:'Skylar',  lastName:'James',    email:'skylar@gritgold.com',        addr1:'8 Beech Boulevard',          city:'Atlanta',  state:'Georgia',   zip:'30340', tags:'VIP'},
+  {row:58,app:'Application title 57', status:'Approved',          biz:'Peat & Pearl',      firstName:'Violet',  lastName:'Watson',   email:'violet@peatpearl.com',       addr1:'12 Rowan Road',              city:'Atlanta',  state:'Georgia',   zip:'30341', tags:''},
+  {row:59,app:'Application title 58', status:'Approved',          biz:'Silt & Sage',       firstName:'Miles',   lastName:'Brooks',   email:'miles@siltsage.com',         addr1:'3 Alder Avenue',             city:'Atlanta',  state:'Georgia',   zip:'30342', tags:''},
+  {row:60,app:'Application title 59', status:'Rejected',          biz:'Kelp & Kilim',      firstName:'Aurora',  lastName:'Kelly',    email:'aurora@kelpkilim.com',       addr1:'7 Beech Bank',               city:'Atlanta',  state:'Georgia',   zip:'30343', tags:''},
+];
+
+/* ── NAVIGATION ── */
+function goTo(n) {
+  if (n===3) buildMap();
+  if (n===4) buildReview();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+  updateProgress(n);
+  S.step=n;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateProgress(n) {
+  for (let i = 1; i <= 5; i++) {
+    const step = document.getElementById('sp-' + i);
+    const div  = document.getElementById('sd-' + i);
+    step.className = 'sp-step';
+    if (i < n)  { step.className = 'sp-step done'; }
+    if (i === n){ step.className = 'sp-step active'; }
+    if (div) div.className = i < n ? 'sp-divider done' : 'sp-divider';
+  }
+}
+
+/* ── STEP 1 ── */
+function selectType(t) {
+  S.type=t;
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('type-'+t).classList.add('selected');
+  document.getElementById('eventSection').classList.remove('hidden');
+  document.getElementById('s1next').disabled=false;
+  document.getElementById('uploadTitle').textContent = t==='vendor'?'Upload your vendor list':'Upload your ticket list';
+}
+function selectDest(d) {
+  S.dest=d;
+  document.querySelectorAll('.event-card,.global-repo-opt').forEach(c=>c.classList.remove('selected'));
+  const el=document.getElementById('dest-'+d);
+  if(el)el.classList.add('selected');
+}
+
+/* ── STEP 2 — FILE UPLOAD ── */
+function handleDragOver(e){e.preventDefault();document.getElementById('dropzone').classList.add('drag-over');}
+function handleDragLeave(){document.getElementById('dropzone').classList.remove('drag-over');}
+function handleDrop(e){e.preventDefault();document.getElementById('dropzone').classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)processFile(f);}
+function handleFileSelect(e){const f=e.target.files[0];if(f)processFile(f);}
+function processFile(file){
+  const errArea=document.getElementById('uploadErrArea');
+  errArea.innerHTML='';
+  const ext='.'+file.name.split('.').pop().toLowerCase();
+  const errs=[];
+  if(!['.csv','.xls','.xlsx'].includes(ext))errs.push('File type not supported. Please upload a CSV, XLS, or XLSX file.');
+  if(file.size>20*1024*1024)errs.push('File is too large ('+((file.size/1024/1024).toFixed(1))+' MB). Maximum is 20 MB.');
+  if(errs.length){
+    document.getElementById('dropzone').classList.add('has-error');
+    errArea.innerHTML=errs.map(e=>`<div class="alert alert-error"><span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></span>${e}</div>`).join('');
+    return;
+  }
+  const rows=Math.floor(Math.random()*40)+8;
+  S.file=file;
+  document.getElementById('dropzone').classList.remove('has-error');
+  document.getElementById('dropzone').classList.add('has-file');
+  document.getElementById('dzEmoji').innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  document.getElementById('dzSelect').textContent='File ready';
+  document.getElementById('dzInfo').textContent='Swap it by dropping another file here';
+  document.getElementById('fileCardArea').innerHTML=`
+    <div class="file-card">
+      <div class="file-card-icon" style="color:var(--color-text-secondary);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div style="flex:1">
+        <div class="file-card-name">${file.name}</div>
+        <div class="file-card-meta">${(file.size/1024).toFixed(1)} KB · ~${rows} rows detected</div>
+      </div>
+      <button class="btn btn-icon" onclick="removeFile()" title="Remove"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>`;
+  document.getElementById('s2next').disabled=false;
+  toast('File uploaded successfully','success');
+}
+function removeFile(){
+  S.file=null;
+  document.getElementById('dropzone').classList.remove('has-file','has-error');
+  document.getElementById('dzEmoji').innerHTML='<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>';
+  document.getElementById('dzSelect').textContent='Select files';
+  document.getElementById('dzInfo').innerHTML='Accepted file types: CSV, XLS, or XLSX<br>Less than 20 MB · Max 100 rows';
+  document.getElementById('fileCardArea').innerHTML='';
+  document.getElementById('s2next').disabled=true;
+  document.getElementById('fileInput').value='';
+}
+
+/* ── STEP 3 — MAP ── */
+function buildMap(){
+  const cols=S.type==='vendor'?vendorCols:ticketCols;
+  const opts=S.type==='vendor'?vendorOpts:ticketOpts;
+  const notFound=['facebook','instagram','twitter','special_request','logo_url'];
+
+  // Sort: flagged first (not found, then required unmapped), then matched, then optional
+  const sorted = [...cols].sort((a,b)=>{
+    const aNotFound = notFound.includes(a.field) && !a.req;
+    const bNotFound = notFound.includes(b.field) && !b.req;
+    const score = c => {
+      if(notFound.includes(c.field) && !c.req) return 0; // not found — highest priority
+      if(c.req) return 1;                                  // required — second
+      if(c.field) return 2;                                // matched optional — third
+      return 3;                                            // unmatched optional — last
+    };
+    return score(a) - score(b);
+  });
+
+  let auto=0;
+  document.getElementById('mapBody').innerHTML=sorted.map(c=>{
+    const isNotFound = notFound.includes(c.field) && !c.req;
+    const isMatched  = !isNotFound;
+    if(isMatched) auto++;
+
+    const colName = c.req
+      ? `<div class="source-col">${c.src} <span style="color:var(--color-status-negative);font-weight:600;">*</span></div>`
+      : `<div class="source-col">${c.src}</div>`;
+
+    const optHtml=opts.map(o=>`<option value="${o.v}"${(isMatched && o.v===c.field)?' selected':''}>${o.label}</option>`).join('');
+
+    let pillCls, pillText;
+    if(isNotFound){
+      pillCls='status-pill awaiting'; pillText='Not found';
+    } else {
+      pillCls='status-pill approved'; pillText='Mapped';
+    }
+
+    // Only highlight rows with actual problems
+    const rowStyle = isNotFound
+      ? ' style="background:#fef5db;"'                          // yellow — not found
+      : (c.req && !isMatched)
+        ? ' style="background:#f7d7dc;"'                        // pink — required but not mapped
+        : '';                                                    // no highlight — all good
+
+    return `<tr${rowStyle}>
+      <td>${colName}</td>
+      <td><div class="source-sample">${c.sample}</div></td>
+      <td style="text-align:center;color:var(--color-text-secondary);font-size:18px;">→</td>
+      <td><select class="map-select${isMatched?' auto':''}" onchange="onMapChange(this)">${optHtml}</select></td>
+      <td style="text-align:left;"><span class="${pillCls}">${pillText}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('autoCount').textContent=auto;
+  document.getElementById('totalCount').textContent=cols.length;
+}
+function onMapChange(sel){
+  sel.classList.remove('auto');
+  const pill = sel.closest('tr').querySelector('.status-pill');
+  if(!pill) return;
+  if(!sel.value){
+    pill.className='status-pill withdrawn';
+    pill.textContent='Skipped';
+  } else {
+    pill.className='status-pill approved';
+    pill.textContent='Mapped';
+  }
+}
+
+/* ── STEP 4 — REVIEW ── */
+// ── REVIEW PAGE ──
+let reviewFilter = 'all';
+
+function filterRows(f, btn) {
+  reviewFilter = f;
+  document.querySelectorAll('.seg-item').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  renderReviewTable();
+}
+
+function buildReview() {
+  renderReviewTable();
+  // Tags box
+  const allTags = [...new Set(allRows.filter(r=>r.tags).flatMap(r=>r.tags.split(',').map(t=>t.trim())))];
+  if(allTags.length) {
+    document.getElementById('tagsBox').classList.remove('hidden');
+    document.getElementById('tagsList').innerHTML = allTags.map(t=>`<span class="tag-secondary">${t}</span>`).join(' ');
+  }
+}
+
+function getRowState(r) {
+  if(r._skip) return 'skip';
+  if(r._errors && r._errors.length && !r._fixed) return 'error';
+  return 'valid';
+}
+
+function renderReviewTable() {
+  // Sort: errors first, then skipped, then valid
+  const sorted = [...allRows].sort((a,b) => {
+    const rank = r => {
+      if(r._errors && r._errors.length && !r._fixed) return 0;
+      if(r._skip) return 1;
+      return 2;
+    };
+    return rank(a) - rank(b);
+  });
+
+  const filtered = sorted.filter(r => {
+    if(reviewFilter === 'error') return getRowState(r) === 'error';
+    if(reviewFilter === 'valid') return getRowState(r) === 'valid';
+    return true;
+  });
+
+  const errCount   = allRows.filter(r => getRowState(r)==='error').length;
+  const skipCount  = allRows.filter(r => r._skip).length;
+  const validCount = allRows.filter(r => getRowState(r)==='valid').length;
+
+  const _s = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  _s('r4-err',   errCount);
+  _s('r4-skip',  skipCount);
+  _s('r4-valid', validCount);
+  _s('r4-showing', filtered.length);
+  _s('r4-total',   allRows.length);
+  _s('importLabel', validCount);
+  _s('r-imp',       validCount);
+
+  document.getElementById('reviewBody').innerHTML = filtered.map(r => buildRow(r)).join('');
+}
+
+function buildRow(r) {
+  const state = getRowState(r);
+  const rowCls = state === 'error' ? 'row-error' : state === 'skip' ? 'row-skip' : r._fixed ? 'row-fixed' : 'row-valid';
+  const pill = state === 'error'
+    ? `<span class="status-pill rejected">Error</span>`
+    : state === 'skip'
+    ? `<span class="status-pill awaiting">Skipped</span>`
+    : r._fixed
+    ? `<span class="status-pill approved">Fixed</span>`
+    : `<span class="status-pill approved">${r.status}</span>`;
+
+  const errMap = {};
+  (r._errors||[]).forEach(e => { errMap[e.field] = e; });
+
+  function cell(field, value, type='text') {
+    const err = errMap[field];
+    const isEmpty = !value || value.trim() === '';
+    const isPreopen = state === 'error' && err;
+    const hasErr = !!err;
+
+    if(r._skip) {
+      return `<td class="review-cell"><span class="cell-display">${value||'—'}</span></td>`;
+    }
+
+  // DS PenEdit icon — exact SVG from design system (node 130:9)
+  const pencil = `<span class="cell-edit-hint">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 8.1917C20.0006 8.08642 19.9804 7.98206 19.9406 7.8846C19.9008 7.78714 19.8421 7.69849 19.768 7.62374L16.376 4.232C16.3012 4.15786 16.2126 4.0992 16.1151 4.05939C16.0176 4.01958 15.9133 3.9994 15.808 4.00001C15.7027 3.9994 15.5983 4.01958 15.5009 4.05939C15.4034 4.0992 15.3147 4.15786 15.24 4.232L12.976 6.49583L4.23201 15.2392C4.15787 15.3139 4.09921 15.4026 4.0594 15.5C4.01958 15.5975 3.9994 15.7019 4.00001 15.8071V19.1989C4.00001 19.411 4.0843 19.6145 4.23433 19.7645C4.38436 19.9145 4.58784 19.9988 4.80001 19.9988H8.19201C8.30395 20.0049 8.41592 19.9874 8.52066 19.9474C8.6254 19.9075 8.72057 19.8459 8.80001 19.7668L17.496 11.0235L19.768 8.79966C19.841 8.72213 19.9005 8.63289 19.944 8.53567C19.9517 8.47191 19.9517 8.40745 19.944 8.34369C19.9477 8.30645 19.9477 8.26893 19.944 8.2317L20 8.1917ZM7.86401 18.3989H5.60001V16.1351L13.544 8.1917L15.808 10.4555L7.86401 18.3989ZM16.936 9.32762L14.672 7.06378L15.808 5.93587L18.064 8.1917L16.936 9.32762Z" fill="#5e6463"/></svg>
+    <span style="font-size:14px;line-height:14px;color:#5e6463;font-family:var(--font-family-primary);">Edit</span>
+  </span>`;
+
+  // Error cells: single click to edit. Valid cells: double click.
+  const clickHandler = 'onclick';
+
+    if(type === 'status-select') {
+      const opts = VALID_STATUSES.map(s=>`<option value="${s}"${s===value?' selected':''}>${s}</option>`).join('');
+      return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
+        <span class="cell-display">
+          <span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>
+          ${pencil}
+        </span>
+        <div class="cell-input">
+          <select class="cell-select-input" data-field="${field}" data-row="${r.row}" onchange="saveCell(this)" onblur="saveCell(this)">
+            <option value="">Select status…</option>${opts}
+          </select>
+        </div>
+      </td>`;
+    }
+
+    if(type === 'state-select') {
+      const opts = US_STATES.map(s=>`<option value="${s}"${s===value?' selected':''}>${s}</option>`).join('');
+      return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
+        <span class="cell-display">
+          <span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>
+          ${pencil}
+        </span>
+        <div class="cell-input">
+          <select class="cell-select-input" data-field="${field}" data-row="${r.row}" onchange="saveCell(this)" onblur="saveCell(this)">
+            <option value="">Select state…</option>${opts}
+          </select>
+        </div>
+      </td>`;
+    }
+
+    // Text input
+    const inputCls = `cell-text-input${hasErr?' error':''}`;
+    const innerVal = isEmpty && hasErr
+      ? `<em class="cell-value-text" style="color:var(--color-status-negative);">Empty</em>`
+      : `<span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>`;
+    return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
+      <span class="cell-display">${innerVal}${pencil}</span>
+      <div class="cell-input">
+        <input class="${inputCls}" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
+          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')cancelEdit(this.closest('.review-cell'))">
+      </div>
+    </td>`;
+  }
+
+  return `<tr class="${rowCls}" data-row="${r.row}" id="tr-${r.row}">
+    <td style="color:var(--color-text-secondary);font-size:var(--font-size-p3);">${r.row}</td>
+    ${cell('app',      r.app)}
+    ${cell('firstName',r.firstName)}
+    ${cell('lastName', r.lastName)}
+    ${cell('email',    r.email)}
+    ${cell('status',   r.status, 'status-select')}
+    ${cell('biz',      r.biz)}
+    <td class="review-cell"><span class="cell-display">${r.tags||'—'}</span></td>
+    <td>${pill}</td>
+  </tr>`;
+}
+
+function startEdit(cell) {
+  if(cell.classList.contains('editing')) return;
+  cell.classList.add('editing');
+  const input = cell.querySelector('input,select');
+  if(input) { input.focus(); if(input.select) input.select(); }
+}
+
+function cancelEdit(cell) {
+  cell.classList.remove('editing');
+}
+
+function saveCell(input) {
+  const field = input.dataset.field;
+  const rowNum = parseInt(input.dataset.row);
+  const newVal = input.value.trim();
+  const row = allRows.find(r => r.row === rowNum);
+  if(!row) return;
+
+  // Update the data
+  row[field] = newVal;
+
+  // Remove the error for this field if it's now filled
+  if(row._errors) {
+    row._errors = row._errors.filter(e => {
+      if(e.field !== field) return true;
+      // Validate the new value
+      if(e.type === 'missing' && newVal) return false;
+      if(field === 'email' && newVal && newVal.includes('@') && newVal.includes('.')) return false;
+      if(field === 'status' && VALID_STATUSES.includes(newVal)) return false;
+      if(field === 'state' && US_STATES.includes(newVal)) return false;
+      if(e.type === 'format' && newVal && newVal !== 'Lorem Ipsum') return false;
+      if(e.type === 'invalid' && newVal) return false;
+      return true; // keep error
+    });
+    if(row._errors.length === 0) row._fixed = true;
+  }
+
+  // Re-render just this row
+  const tr = document.getElementById('tr-' + rowNum);
+  if(tr) tr.outerHTML = buildRow(row);
+
+  // Update stats
+  const errCount   = allRows.filter(r => getRowState(r)==='error').length;
+  const validCount = allRows.filter(r => getRowState(r)==='valid').length;
+  const _s2 = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  _s2('r4-err',    errCount);
+  _s2('r4-valid',  validCount);
+  _s2('importLabel', validCount);
+  _s2('r-imp',       validCount);
+}
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const tc = document.getElementById('tab-'+id);
+  if(tc) tc.classList.add('active');
+}
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+/* ── STEP 5 — IMPORT ── */
+function startImport(){
+  goTo(5);
+  const log=document.getElementById('importLog');
+  const fill=document.getElementById('pFill');
+  const pct=document.getElementById('pPct');
+  const fileName=S.file?S.file.name:'vendor_list.xlsx';
+  const lines=[
+    {t:300,  txt:'-> Parsing file: '+fileName,        cls:''},
+    {t:700,  txt:'OK 9 rows detected',                cls:'log-ok'},
+    {t:1100, txt:'-> Applying column mapping…',       cls:''},
+    {t:1500, txt:'OK All required fields mapped',      cls:'log-ok'},
+    {t:1900, txt:'-> Validating rows…',               cls:''},
+    {t:2400, txt:'OK '+allRows.filter(r=>getRowState(r)==='valid').length+' rows valid', cls:'log-ok'},
+    {t:2600, txt:'~~ 1 duplicate skipped',             cls:'log-warn'},
+    {t:2800, txt:'!! 2 rows failed validation',        cls:'log-err'},
+    {t:3200, txt:'-> Importing valid rows…',           cls:''},
+    {t:3600, txt:'OK Row 1 — Jane Smith @ Acme Co',    cls:'log-ok'},
+    {t:3900, txt:'OK Row 2 — Tom Baker @ Clay & Co',   cls:'log-ok'},
+    {t:4200, txt:'OK Row 3 — Priya Patel @ Spice World',cls:'log-ok'},
+    {t:4500, txt:'OK Row 4 — Carlos Reyes @ Studio Nine',cls:'log-ok'},
+    {t:4800, txt:'OK Row 5 — Amara Diallo @ Paper Moon',cls:'log-ok'},
+    {t:5100, txt:'OK Row 6 — Sofia Klein @ Loom Works', cls:'log-ok'},
+    {t:5400, txt:'-> Creating tags in Global Repository…',cls:''},
+    {t:5700, txt:'OK Tags created: VIP, Needs assistance, Featured',cls:'log-ok'},
+    {t:6100, txt:'OK Import complete — '+allRows.filter(r=>getRowState(r)==='valid').length+' vendors added',cls:'log-ok'},
+  ];
+  lines.forEach((l,i)=>{
+    setTimeout(()=>{
+      const d=document.createElement('div');
+      d.className=l.cls;d.textContent=l.txt;
+      log.appendChild(d);log.scrollTop=log.scrollHeight;
+      const p=Math.round((i+1)/lines.length*100);
+      fill.style.width=p+'%';pct.textContent=p+'%';
+    },l.t);
+  });
+  setTimeout(showResults,6500);
+}
+function showResults(){
+  document.getElementById('importTitle').textContent='Import complete';
+  document.getElementById('importDesc').textContent='Your data has been imported successfully.';
+  document.getElementById('importEmoji').innerHTML='<span style="display:inline-flex;width:64px;height:64px;border-radius:50%;background:var(--teal-50);align-items:center;justify-content:center;color:var(--color-status-brand-primary);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+  document.getElementById('resultsArea').classList.remove('hidden');
+  document.getElementById('r-fail').textContent=0;
+  toast('Import complete! '+allRows.filter(r=>getRowState(r)==='valid').length+' vendors added.','success');
+}
+
+/* ── RESET ── */
+function resetWizard(){
+  S.step=1;S.type=null;S.dest='global';S.file=null;
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('eventSection').classList.add('hidden');
+  document.getElementById('s1next').disabled=true;
+  removeFile();
+  document.getElementById('resultsArea').classList.add('hidden');
+  document.getElementById('pFill').style.width='0%';
+  document.getElementById('pPct').textContent='0%';
+  document.getElementById('importLog').innerHTML='<div>▶ Starting migration job…</div>';
+  document.getElementById('importTitle').textContent='Importing your data…';
+  document.getElementById('importDesc').textContent="This usually takes less than a minute. Don't close this tab.";
+  document.getElementById('importEmoji').textContent='⏳';
+  document.getElementById('dest-global').classList.add('selected');
+  document.querySelectorAll('.event-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('vendorNote').classList.add('hidden');
+  document.getElementById('tagsBox').classList.add('hidden');
+  goTo(1);
+}
+
+/* ── TOAST — from Figma node 1081:899 ── */
+function toast(msg,type='info'){
+  const icons={success:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',error:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>',info:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg>'};
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');
+  el.className='toast toast-'+type;
+  el.innerHTML=`<span>${icons[type]||'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/></svg>'}</span><span style="flex:1">${msg}</span><span class="toast-close" onclick="this.parentElement.remove()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),4000);
+}
+</script>
+</body>
+</html>
