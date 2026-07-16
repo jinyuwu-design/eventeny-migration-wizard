@@ -284,7 +284,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
    File name: P3/SemiBold #0389a0 (NOT green/black — the teal color IS the ready-state signal)
    File size: P4/Regular #5e6463
    Close icon: 20x20 absolute top:15px right:15px */
-.file-card{position:relative;display:flex;align-items:flex-start;gap:var(--space-12);padding:var(--space-16);background:white;border:1px solid #c4cac9;border-radius:var(--radius-8);margin-top:var(--space-16);cursor:pointer;transition:border-color .15s,background .15s;}.file-card:hover{border-color:var(--color-status-brand-primary);background:var(--teal-50);}
+.file-card{position:relative;display:flex;align-items:flex-start;gap:var(--space-12);padding:var(--space-16);background:white;border:1px solid #c4cac9;border-radius:var(--radius-8);margin-top:var(--space-16);}
 .file-card-icon{width:40px;height:40px;border:1px solid #c4cac9;border-radius:var(--radius-4);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--color-text-secondary);}
 .file-card-name{font-size:var(--font-size-p3);font-weight:var(--font-weight-semibold);color:#0389a0;line-height:var(--line-height-p3);}
 .file-card-meta{font-size:var(--font-size-p4);color:var(--color-text-secondary);line-height:var(--line-height-p4);margin-top:2px;}
@@ -604,11 +604,20 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
   outline: none;
   min-width: 120px;
 }
+.cell-select-input.error { border-color: var(--color-status-negative); }
+
+/* Error cells on the Review data table — input shown upfront, with the required fix noted below in red */
+td.error-cell { vertical-align: top; padding-top: 8px; padding-bottom: 8px; }
+.cell-error-msg {
+  margin-top: 4px;
+  font-size: var(--font-size-p4);
+  line-height: 1.35;
+  color: var(--color-status-negative);
+}
+
 /* Row states */
-tr.row-error { background: white; }
-tr.row-skip  { background: white; }
+tr.row-error { background: var(--color-bg-negative); }
 tr.row-valid { background: white; }
-tr.row-fixed { background: white; }
 
 /* HOURGLASS LOADER — rotating flip + sand pour, during import wait */
 .hourglass-loader{display:inline-block;margin-bottom:var(--space-8);}
@@ -1002,19 +1011,19 @@ tr.row-fixed { background: white; }
         <div class="type-card" id="type-ticket" onclick="selectType('ticket')">
           <div class="type-icon" style="background:var(--blue-50);color:var(--color-status-information);"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg></div>
           <div>
-            <div class="type-title">Ticket List</div>
-            <div class="type-desc">Ticket buyers and attendees with order details and contact information.</div>
+            <div class="type-title">Tickets</div>
+            <div class="type-desc">Ticket types and pricing for your event — quantities, sale windows, fees, and visibility settings.</div>
           </div>
           <div class="chip-row">
-            <span class="tag-secondary">First name</span>
-            <span class="tag-secondary">Last name</span>
-            <span class="tag-secondary">Email</span>
-            <span class="tag-secondary">Ticket type</span>
-            <span class="tag-secondary">Order ID</span>
-            <span class="tag-secondary">Phone</span>
-            <span class="tag-secondary">Purchase date</span>
-            <span class="tag-secondary">Check-in status</span>
-            <span class="tag-secondary">Notes</span>
+            <span class="tag-secondary">Ticket name</span>
+            <span class="tag-secondary">Quantity available</span>
+            <span class="tag-secondary">Price</span>
+            <span class="tag-secondary">Sale start date</span>
+            <span class="tag-secondary">Sale end date</span>
+            <span class="tag-secondary">Ticket location</span>
+            <span class="tag-secondary">Visibility</span>
+            <span class="tag-secondary">Fees</span>
+            <span class="tag-secondary">Refundable</span>
           </div>
         </div>
       </div>
@@ -1022,7 +1031,10 @@ tr.row-fixed { background: white; }
       <!-- DESTINATION -->
 
       <div class="wizard-footer">
-        <span class="text-sm text-muted">Choose a type to continue</span>
+        <div style="display:flex;align-items:center;gap:var(--space-16);">
+          <span class="text-sm text-muted">Choose a type to continue</span>
+          <button type="button" class="link-tertiary" onclick="skipDataMigration()"><span>Skip, I'll import data later</span></button>
+        </div>
         <button class="btn btn-primary btn-md" id="s1next" disabled onclick="goTo(2)"><span>Next</span><span class="btn-icon-el">→</span></button>
       </div>
     </div>
@@ -1050,14 +1062,14 @@ tr.row-fixed { background: white; }
           </span>
         </button>
         <span style="color:#9da6a5;">|</span>
-        <button type="button" class="link-tertiary" onclick="toast((S.type==='vendor'?'Vendor':'Ticket')+' template downloaded','success');">
+        <button type="button" class="link-tertiary" onclick="toast('Blank Excel template downloaded','success');">
           <svg style="display:block;width:20px;height:20px;flex-shrink:0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Download import template</span>
+          <span>Download blank Excel template</span>
         </button>
-        <span style="color:#9da6a5;" id="dlUploadedSep" class="hidden">|</span>
-        <button type="button" class="link-tertiary hidden" id="downloadUploadedBtn" onclick="downloadUploadedFile()">
+        <span style="color:#9da6a5;">|</span>
+        <button type="button" class="link-tertiary" id="downloadUploadedBtn" onclick="exportExistingList()">
           <svg style="display:block;width:20px;height:20px;flex-shrink:0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>Download uploaded file</span>
+          <span id="exportExistingLabel">Export existing vendor list for bulk editing</span>
         </button>
       </div>
 
@@ -1154,7 +1166,6 @@ tr.row-fixed { background: white; }
         <select class="map-select" id="reviewSortSelect" style="width:220px;flex-shrink:0;" onchange="sortReviewRows(this.value)">
           <option value="default">Sort by status</option>
           <option value="error">Errors</option>
-          <option value="skip">Skipped</option>
           <option value="valid">Valid</option>
         </select>
       </div>
@@ -1408,15 +1419,24 @@ const vendorCols = [
   {src:'Tags',              samples:['VIP, Needs assistance','Featured','—'],                                   field:'tags',              req:false},
 ];
 const ticketCols = [
-  {src:'First name',      samples:['Michael','Sara','David'],                                            field:'first_name',     req:true},
-  {src:'Last name',       samples:['Johnson','Miller','Wilson'],                                          field:'last_name',      req:true},
-  {src:'Email',           samples:['m.johnson@example.com','sara@example.com','david@example.com'],      field:'email',          req:true},
-  {src:'Ticket type',     samples:['General Admission','VIP Pass','General Admission'],                  field:'ticket_type',    req:true},
-  {src:'Order ID',        samples:['ORD-20250312-001','ORD-20250312-002','ORD-20250312-003'],             field:'order_id',       req:true},
-  {src:'Phone',           samples:['404-555-0192','404-555-0193','404-555-0194'],                         field:'phone',          req:false},
-  {src:'Purchase date',   samples:['2025-03-12','2025-03-12','2025-03-13'],                               field:'purchase_date',  req:false},
-  {src:'Check-in status', samples:['Not checked in','Checked in','Not checked in'],                       field:'checkin_status', req:false},
-  {src:'Notes',           samples:['Wheelchair accessible','—','Bringing a guest'],                       field:'notes',          req:false},
+  {src:'Ticket name',                                   samples:['Early Bird Ticket','VIP Pass','General Admission'],           field:'ticket_name',               req:true},
+  {src:'Quantity Available',                             samples:['100','250','500'],                                          field:'quantity_available',        req:true},
+  {src:'Price',                                          samples:['$25.00','$75.00','$40.00'],                                 field:'price',                      req:true},
+  {src:'Ticket sale start date',                         samples:['07/01/24 09:00','07/05/24 00:00','07/01/24 09:00'],         field:'sale_start_date',            req:false},
+  {src:'Ticket sale end date',                           samples:['07/10/24 13:10','08/01/24 23:59','08/15/24 23:59'],         field:'sale_end_date',              req:false},
+  {src:'Opening/starting time',                          samples:['07/10/24 09:00','08/01/24 09:00','08/15/24 09:00'],         field:'start_time',                 req:false},
+  {src:'Closing/ending time',                            samples:['07/20/24 19:30','08/01/24 22:00','08/15/24 22:00'],         field:'end_time',                   req:false},
+  {src:'Sales tax rate',                                 samples:['10.25%','0%','7.5%'],                                       field:'sales_tax_rate',             req:false},
+  {src:'Ticket Location',                                samples:['Main Hall','Virtual','Main Hall'],                          field:'ticket_location',            req:false},
+  {src:'Maximum Quantity Allowed Per User',              samples:['5','No limit','4'],                                         field:'max_qty_per_user',           req:false},
+  {src:'Visibility',                                     samples:['Public','Private','Public'],                                field:'visibility',                 req:false},
+  {src:'Fees',                                           samples:['Pass','Absorb','Pass'],                                     field:'fees',                       req:false},
+  {src:'Refundable',                                     samples:['Yes','No','Yes'],                                           field:'refundable',                 req:false},
+  {src:'Allow switching or upgrading',                   samples:['Yes','No','Yes'],                                           field:'allow_switching',            req:false},
+  {src:'Allow Reselling',                                samples:['No','No','Yes'],                                            field:'allow_reselling',            req:false},
+  {src:'Allow buyer edit question answer after purchase',samples:['Yes','Yes','No'],                                           field:'allow_edit_after_purchase',  req:false},
+  {src:'Description',                                    samples:['Includes early access','VIP lounge access','Standard entry'],field:'description',                req:false},
+  {src:'Instructions',                                   samples:['Arrive 30 min early','Check in at VIP desk','—'],           field:'instructions',               req:false},
 ];
 
 const vendorOpts = [
@@ -1438,11 +1458,24 @@ const vendorOpts = [
 ];
 const ticketOpts = [
   {v:'',label:'— Skip this column —'},
-  {v:'first_name',label:'First name *'},{v:'last_name',label:'Last name *'},
-  {v:'email',label:'Email *'},{v:'ticket_type',label:'Ticket type *'},
-  {v:'order_id',label:'Order ID *'},{v:'phone',label:'Phone'},
-  {v:'purchase_date',label:'Purchase date'},{v:'checkin_status',label:'Check-in status'},
-  {v:'notes',label:'Notes'},
+  {v:'ticket_name',label:'Ticket name *'},
+  {v:'quantity_available',label:'Quantity Available *'},
+  {v:'price',label:'Price *'},
+  {v:'sale_start_date',label:'Ticket sale start date'},
+  {v:'sale_end_date',label:'Ticket sale end date'},
+  {v:'start_time',label:'Opening/starting time'},
+  {v:'end_time',label:'Closing/ending time'},
+  {v:'sales_tax_rate',label:'Sales tax rate'},
+  {v:'ticket_location',label:'Ticket Location'},
+  {v:'max_qty_per_user',label:'Maximum Quantity Allowed Per User'},
+  {v:'visibility',label:'Visibility'},
+  {v:'fees',label:'Fees'},
+  {v:'refundable',label:'Refundable'},
+  {v:'allow_switching',label:'Allow switching or upgrading'},
+  {v:'allow_reselling',label:'Allow Reselling'},
+  {v:'allow_edit_after_purchase',label:'Allow buyer edit question answer after purchase'},
+  {v:'description',label:'Description'},
+  {v:'instructions',label:'Instructions'},
 ];
 
 const VALID_STATUSES = ['Approved','Awaiting Decision','Rejected','Waitlisted','Withdrawn'];
@@ -1471,8 +1504,10 @@ const allRows = [
    _errors:[{field:'status',type:'invalid',msg:'"unknown status" is not a valid status value'}]},
 
   // ── SKIPPED (duplicates) ──
-  {row:11,app:'Application title 10',                  status:'Approved',       biz:'Already There LLC', firstName:'Olivia',  lastName:'Anderson',email:'duplicate@example.com',       addr1:'1 Infinite Loop',            city:'Atlanta',  state:'Georgia',   zip:'30303', tags:'', _skip:true, _skipReason:'Duplicate email in this file'},
-  {row:22,app:'Application title 21',                  status:'Awaiting Decision',biz:'Twin Peaks Co',   firstName:'Mia',     lastName:'Young',   email:'mia.young@example.com',       addr1:'2 Twin Peaks Blvd',          city:'Portland', state:'Oregon',    zip:'97201', tags:'', _skip:true, _skipReason:'Duplicate email in this file'},
+  {row:11,app:'Application title 10',                  status:'Approved',       biz:'Already There LLC', firstName:'Olivia',  lastName:'Anderson',email:'duplicate@example.com',       addr1:'1 Infinite Loop',            city:'Atlanta',  state:'Georgia',   zip:'30303', tags:'',
+   _errors:[{field:'email',type:'duplicate',msg:'This email already appears elsewhere in your file — update it to a unique address'}]},
+  {row:22,app:'Application title 21',                  status:'Awaiting Decision',biz:'Twin Peaks Co',   firstName:'Mia',     lastName:'Young',   email:'mia.young@example.com',       addr1:'2 Twin Peaks Blvd',          city:'Portland', state:'Oregon',    zip:'97201', tags:'',
+   _errors:[{field:'email',type:'duplicate',msg:'This email already appears elsewhere in your file — update it to a unique address'}]},
 
   // ── VALID (clean rows) ──
   {row:3, app:'Application title 2',  status:'Approved',          biz:'Prism Gallery',     firstName:'Alice',   lastName:'Johnson',  email:'sarahsmith@hotmail.com',     addr1:'4 Privet Drive',             city:'Atlanta',  state:'Georgia',   zip:'30304', tags:'Featured'},
@@ -1595,6 +1630,11 @@ function completePayoutLater(){
   document.getElementById('wizardShell').classList.remove('hidden');
   goTo(1);
 }
+function skipDataMigration(){
+  document.getElementById('wizardShell').classList.remove('hidden');
+  toast('You can import your data anytime from the dashboard','info');
+  openDashboard();
+}
 function beginPayoutSetup(){
   toast('Redirecting to Stripe to set up your payout method…','info');
 }
@@ -1630,6 +1670,7 @@ function selectType(t) {
   _s('uploadTitle',t==='vendor'?'Upload your vendor list':'Upload your ticket list');
   const reqCols = (t==='vendor'?vendorCols:ticketCols).filter(c=>c.req).map(c=>c.src);
   _s('reqFieldsTooltip', reqCols.join(', '));
+  _s('exportExistingLabel', 'Export existing '+(t==='vendor'?'vendor':'ticket')+' list for bulk editing');
 }
 function selectDest(d) {
   S.dest=d;
@@ -1656,79 +1697,41 @@ function processFile(file){
     return;
   }
   const rows=Math.floor(Math.random()*40)+8;
-  if(S.file){
-    // A file is already uploaded — confirm before swapping it out
-    S.pendingFile=file;
-    S.pendingRows=rows;
-    openSwapFileModal();
-    return;
-  }
   applyFile(file, rows);
 }
 function applyFile(file, rows){
   S.file=file;
   S.fileRows=rows;
-  document.getElementById('dropzone').classList.remove('has-error');
-  document.getElementById('dropzone').classList.add('has-file');
-  _sh('dzEmoji','<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>');
-  _s('dzSelect','File ready');
-  _sh('dzInfo','Swap it by dropping another file here<br>To overwrite existing file data, you can download uploaded file and update values, and re-upload.');
+  document.getElementById('dropzone').classList.add('hidden');
   _sh('fileCardArea',`
-    <div class="file-card" onclick="if(!event.target.closest('.file-card-close'))document.getElementById('fileInput').click();" title="Click to upload a new file">
+    <div class="file-card">
       <div class="file-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
       <div style="flex:1">
         <div class="file-card-name">${file.name}</div>
         <div class="file-card-meta">${(file.size/1024).toFixed(1)} KB · ~${rows} rows detected</div>
       </div>
-      <button class="file-card-close" onclick="event.stopPropagation();removeFile()" title="Remove"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="file-card-close" onclick="removeFile()" title="Remove this file"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`);
   document.getElementById('s2next').disabled=false;
-  document.getElementById('downloadUploadedBtn').classList.remove('hidden');
-  document.getElementById('dlUploadedSep').classList.remove('hidden');
   document.getElementById('fileInput').value='';
   toast('File uploaded successfully','success');
 }
-function openSwapFileModal(){
-  const rows=[
-    {field:'File name',    existing:S.file.name,                              updated:S.pendingFile.name},
-    {field:'File size',    existing:(S.file.size/1024).toFixed(1)+' KB',       updated:(S.pendingFile.size/1024).toFixed(1)+' KB'},
-    {field:'Rows detected',existing:'~'+S.fileRows+' rows',                    updated:'~'+S.pendingRows+' rows'},
-  ];
-  _sh('swapFileModalBody',rows.map(r=>`<tr>
-      <td style="font-weight:var(--font-weight-semibold);">${r.field}</td>
-      <td><span class="tag-secondary">${r.existing}</span></td>
-      <td style="color:var(--color-text-secondary);white-space:nowrap;">will be set to</td>
-      <td><span class="tag">${r.updated}</span></td>
-    </tr>`).join(''));
-  document.getElementById('swapFileModalBackdrop').classList.remove('hidden');
-}
-function closeSwapFileModal(){
-  document.getElementById('swapFileModalBackdrop').classList.add('hidden');
-  S.pendingFile=null;
-  S.pendingRows=null;
-  document.getElementById('fileInput').value='';
-}
-function confirmSwapFile(){
-  const file=S.pendingFile, rows=S.pendingRows;
-  S.pendingFile=null;
-  S.pendingRows=null;
-  document.getElementById('swapFileModalBackdrop').classList.add('hidden');
-  applyFile(file, rows);
-}
-function downloadUploadedFile(){
-  if(!S.file){ toast('No file uploaded yet','info'); return; }
-  const url=URL.createObjectURL(S.file);
-  const a=document.createElement('a');
-  a.href=url; a.download=S.file.name;
+function exportExistingList(){
+  const type = S.type==='ticket' ? 'ticket' : 'vendor';
+  const cols = type==='ticket' ? ticketCols : vendorCols;
+  const header = cols.map(c=>c.src).join(',');
+  const blob = new Blob([header+'\n'], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='existing_'+type+'_list.csv';
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
-  toast('Downloading '+S.file.name,'success');
+  toast('Exporting existing '+type+' list…','success');
 }
 function removeFile(){
   S.file=null;
-  document.getElementById('downloadUploadedBtn').classList.add('hidden');
-  document.getElementById('dlUploadedSep').classList.add('hidden');
   document.getElementById('dropzone').classList.remove('has-file','has-error');
+  document.getElementById('dropzone').classList.remove('hidden');
   _sh('dzEmoji','<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>');
   _s('dzSelect','Select files');
   _sh('dzInfo','Accepted file types: CSV, XLS, or XLSX<br>Less than 20 MB');
@@ -1744,7 +1747,7 @@ let mapSortBy = 'default';
 function buildMap(){
   const cols=S.type==='vendor'?vendorCols:ticketCols;
   const opts=S.type==='vendor'?vendorOpts:ticketOpts;
-  const notFound=['facebook','instagram','twitter','special_request','logo_url'];
+  const notFound=S.type==='vendor'?['facebook','instagram','twitter','special_request','logo_url']:['description','instructions','allow_reselling'];
 
   // Sort: either the manual "Sort by status" selection, or the default flagged-first order
   const sorted = [...cols].sort((a,b)=>{
@@ -1869,8 +1872,7 @@ function buildReview() {
 }
 
 function getRowState(r) {
-  if(r._skip) return 'skip';
-  if(r._errors && r._errors.length && !r._fixed) return 'error';
+  if(r._errors && r._errors.length) return 'error';
   return 'valid';
 }
 
@@ -1880,14 +1882,9 @@ let reviewSortBy = 'default';
 function renderReviewTable() {
   // Sort: manual "Sort by status" selection, or default errors-first order
   const sorted = [...allRows].sort((a,b) => {
-    const rank = r => {
-      if(r._errors && r._errors.length && !r._fixed) return 0;
-      if(r._skip) return 1;
-      return 2;
-    };
+    const rank = r => getRowState(r) === 'error' ? 0 : 1;
     if(reviewSortBy === 'error') return (rank(a)===0?0:1) - (rank(b)===0?0:1);
-    if(reviewSortBy === 'skip')  return (rank(a)===1?0:1) - (rank(b)===1?0:1);
-    if(reviewSortBy === 'valid') return (rank(a)===2?0:1) - (rank(b)===2?0:1);
+    if(reviewSortBy === 'valid') return (rank(a)===1?0:1) - (rank(b)===1?0:1);
     return rank(a) - rank(b); // default
   });
 
@@ -1938,28 +1935,15 @@ function sortReviewRows(value){
 
 function buildRow(r) {
   const state = getRowState(r);
-  const rowCls = state === 'error' ? 'row-error' : state === 'skip' ? 'row-skip' : r._fixed ? 'row-fixed' : 'row-valid';
+  const rowCls = state === 'error' ? 'row-error' : 'row-valid';
 
-  // Icons — same composition pattern as Map columns page (Icon+Label group + Standard pill
-  // container). No exact "Standard pill + icon" node exists in Figma — composed, not literal match.
   const icoCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   const icoWarn  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-  const icoX     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
-  const icoClock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-  const icoDash  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
 
-  let pill;
-  if(state === 'error'){
-    pill = `<span class="status-pill rejected status-pill-icon">${icoWarn}Error</span>`;
-  } else if(state === 'skip'){
-    pill = `<span class="status-pill awaiting status-pill-icon">${icoDash}Skipped</span>`;
-  } else if(r._fixed){
-    pill = `<span class="status-pill approved status-pill-icon">${icoCheck}Fixed</span>`;
-  } else {
-    const icoMap = {Approved:icoCheck,'Awaiting Decision':icoClock,Rejected:icoX,Waitlisted:icoClock,Withdrawn:icoDash};
-    const ico = icoMap[r.status] || icoCheck;
-    pill = `<span class="status-pill approved status-pill-icon">${ico}${r.status}</span>`;
-  }
+  // Data status is either Error or Valid — separate from the vendor's own "Status" field (Approved/Rejected/etc.)
+  const pill = state === 'error'
+    ? `<span class="status-pill rejected status-pill-icon">${icoWarn}Error</span>`
+    : `<span class="status-pill approved status-pill-icon">${icoCheck}Valid</span>`;
 
   const errMap = {};
   (r._errors||[]).forEach(e => { errMap[e.field] = e; });
@@ -1967,12 +1951,7 @@ function buildRow(r) {
   function cell(field, value, type='text') {
     const err = errMap[field];
     const isEmpty = !value || value.trim() === '';
-    const isPreopen = state === 'error' && err;
     const hasErr = !!err;
-
-    if(r._skip) {
-      return `<td class="review-cell"><span class="cell-display">${value||'—'}</span></td>`;
-    }
 
   // DS PenEdit icon — exact SVG from design system (node 130:9)
   const pencil = `<span class="cell-edit-hint">
@@ -1980,14 +1959,32 @@ function buildRow(r) {
     <span style="font-size:14px;line-height:14px;color:#5e6463;font-family:var(--font-family-primary);">Edit</span>
   </span>`;
 
-  // Error cells: single click to edit. Valid cells: double click.
-  const clickHandler = 'onclick';
+    // ── ERROR cells: input is shown upfront (no click needed), with the required fix noted below in red ──
+    if(hasErr){
+      if(type === 'status-select'){
+        const opts = VALID_STATUSES.map(s=>`<option value="${s}"${s===value?' selected':''}>${s}</option>`).join('');
+        return `<td class="review-cell error-cell">
+          <select class="cell-select-input error" data-field="${field}" data-row="${r.row}" onchange="saveCell(this)" onblur="saveCell(this)">
+            <option value="">Select status…</option>${opts}
+          </select>
+          <div class="cell-error-msg">${err.msg}</div>
+        </td>`;
+      }
+      return `<td class="review-cell error-cell">
+        <input class="cell-text-input error" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
+          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();">
+        <div class="cell-error-msg">${err.msg}</div>
+      </td>`;
+    }
+
+    // ── VALID cells: unchanged — click to reveal an editable input ──
+    const clickHandler = 'onclick';
 
     if(type === 'status-select') {
       const opts = VALID_STATUSES.map(s=>`<option value="${s}"${s===value?' selected':''}>${s}</option>`).join('');
       return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
         <span class="cell-display">
-          <span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>
+          <span class="cell-value-text">${value||'—'}</span>
           ${pencil}
         </span>
         <div class="cell-input">
@@ -1998,30 +1995,11 @@ function buildRow(r) {
       </td>`;
     }
 
-    if(type === 'state-select') {
-      const opts = US_STATES.map(s=>`<option value="${s}"${s===value?' selected':''}>${s}</option>`).join('');
-      return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
-        <span class="cell-display">
-          <span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>
-          ${pencil}
-        </span>
-        <div class="cell-input">
-          <select class="cell-select-input" data-field="${field}" data-row="${r.row}" onchange="saveCell(this)" onblur="saveCell(this)">
-            <option value="">Select state…</option>${opts}
-          </select>
-        </div>
-      </td>`;
-    }
-
     // Text input
-    const inputCls = `cell-text-input${hasErr?' error':''}`;
-    const innerVal = isEmpty && hasErr
-      ? `<em class="cell-value-text" style="color:var(--color-status-negative);">Empty</em>`
-      : `<span class="cell-value-text" style="${hasErr?'color:var(--color-status-negative);font-weight:500;':''}">${value||'—'}</span>`;
     return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
-      <span class="cell-display">${innerVal}${pencil}</span>
+      <span class="cell-display"><span class="cell-value-text">${value||'—'}</span>${pencil}</span>
       <div class="cell-input">
-        <input class="${inputCls}" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
+        <input class="cell-text-input" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
           onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')cancelEdit(this.closest('.review-cell'))">
       </div>
     </td>`;
@@ -2039,6 +2017,7 @@ function buildRow(r) {
     <td>${pill}</td>
   </tr>`;
 }
+
 function buildTagsCell(r){
   if(!r.tags) return `<span class="cell-display">—</span>`;
   const tags = r.tags.split(',').map(t=>t.trim()).filter(Boolean);
@@ -2124,7 +2103,7 @@ function switchTab(id,el){
 /* ── OVERWRITE CONFIRMATION MODAL ── */
 function openOverwriteModal(){
   const cols=S.type==='vendor'?vendorCols:ticketCols;
-  const notFound=['facebook','instagram','twitter','special_request','logo_url'];
+  const notFound=S.type==='vendor'?['facebook','instagram','twitter','special_request','logo_url']:['description','instructions','allow_reselling'];
   const mapped=cols.filter(c=>!(notFound.includes(c.field) && !c.req));
   const validCount=allRows.filter(r=>getRowState(r)==='valid').length;
 
@@ -2156,8 +2135,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     const bd=document.getElementById('overwriteModalBackdrop');
     if(bd && !bd.classList.contains('hidden')) closeOverwriteModal();
-    const sbd=document.getElementById('swapFileModalBackdrop');
-    if(sbd && !sbd.classList.contains('hidden')) closeSwapFileModal();
   }
 });
 
@@ -2301,44 +2278,5 @@ function toast(msg,type='info'){
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- SWAP FILE CONFIRMATION MODAL — shown when re-uploading over an existing file (Step 2) -->
-<!-- ═══════════════════════════════════════ -->
-<div class="modal-backdrop hidden" id="swapFileModalBackdrop" onclick="if(event.target===this)closeSwapFileModal();">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="swapFileModalTitle">
-    <div class="modal-header">
-      <div class="modal-header-text">
-        <div class="modal-title" id="swapFileModalTitle">Replace uploaded file?</div>
-        <div class="modal-desc">You already have a file uploaded. Uploading this new one will swap it out.</div>
-      </div>
-      <button type="button" class="modal-close" onclick="closeSwapFileModal()" title="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="alert alert-warning" style="margin-bottom:var(--space-16);">
-        <div class="alert-inner">
-          <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-          <div>Replacing your file will reset any column mapping and review progress you've already done, since the new file's columns may not match.</div>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="map-table">
-          <thead>
-            <tr>
-              <th>Selected fields</th>
-              <th>Existing values</th>
-              <th></th>
-              <th>Updated values</th>
-            </tr>
-          </thead>
-          <tbody id="swapFileModalBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-tertiary btn-md" onclick="closeSwapFileModal()"><span>Keep current file</span></button>
-      <button type="button" class="btn btn-primary btn-md" onclick="confirmSwapFile()"><span>Replace file</span></button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
