@@ -945,6 +945,11 @@ tr.row-valid { background: white; }
 .payout-steps li{font-size:var(--font-size-p2);color:var(--color-text-primary);line-height:var(--line-height-p2);}
 .payout-actions{display:flex;flex-direction:column;align-items:center;gap:var(--space-16);}
 .payout-skip{margin:0 auto;}
+.intro-screen{min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-48) var(--space-32);}
+.intro-icon{width:96px;height:96px;border-radius:50%;background:var(--teal-50);color:var(--color-status-brand-primary);display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-24);flex-shrink:0;}
+.intro-title{font-size:var(--font-size-h3);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);margin-bottom:var(--space-16);}
+.intro-desc{font-size:var(--font-size-p2);color:var(--color-text-secondary);line-height:var(--line-height-p2);max-width:480px;margin-bottom:var(--space-32);}
+.intro-actions{display:flex;flex-direction:column;align-items:center;gap:var(--space-16);}
 @media (max-width:900px){
   .payout-screen{flex-direction:column;}
   .payout-illustration{width:100%;max-width:none;border-right:none;border-bottom:var(--stroke-1) solid var(--grey-200);padding:var(--space-32);}
@@ -1003,6 +1008,21 @@ tr.row-valid { background: white; }
           <button type="button" class="link-tertiary payout-skip" onclick="completePayoutLater()"><span>Skip, complete later</span></button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 0.5 — INTRO (precedes "Choose type"; offers a skip before the wizard begins) -->
+<!-- ═══════════════════════════════════════ -->
+<div class="screen" id="screen-intro">
+  <div class="intro-screen">
+    <div class="intro-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div>
+    <h1 class="intro-title">Now let's start migrating your data</h1>
+    <p class="intro-desc">Import your existing vendor or ticket lists so everything's ready when you create your first event. This only takes a few minutes — or you can skip it and import later from your dashboard.</p>
+    <div class="intro-actions">
+      <button class="btn btn-primary btn-lg" onclick="startDataMigration()"><span>Get started</span><span class="btn-icon-el">→</span></button>
+      <button type="button" class="link-tertiary" onclick="skipDataMigration()"><span>Skip, I'll import data later</span></button>
     </div>
   </div>
 </div>
@@ -1104,10 +1124,7 @@ tr.row-valid { background: white; }
       <!-- DESTINATION -->
 
       <div class="wizard-footer">
-        <div class="wizard-footer-group" style="display:flex;align-items:center;gap:var(--space-16);">
-          <span class="text-sm text-muted">Choose a type to continue</span>
-          <button type="button" class="link-tertiary" onclick="skipDataMigration()"><span>Skip, I'll import data later</span></button>
-        </div>
+        <span class="text-sm text-muted">Choose a type to continue</span>
         <button class="btn btn-primary btn-md" id="s1next" disabled onclick="goTo(2)"><span>Next</span><span class="btn-icon-el">→</span></button>
       </div>
     </div>
@@ -1120,7 +1137,7 @@ tr.row-valid { background: white; }
     <div class="card">
       <div class="mb-24">
         <h1 class="card-title" id="uploadTitle">Upload your vendor list</h1>
-        <p class="card-desc">CSV, XLS, or XLSX. Max 20 MB and up to 3,000 rows per file. Upload again anytime to replace this file with a newer version before you import.</p>
+        <p class="card-desc">CSV, XLS, or XLSX. Max 20 MB per file. Upload again anytime to replace this file with a newer version before you import.</p>
       </div>
 
       <div class="link-row" style="display:flex;flex-direction:row;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
@@ -1155,11 +1172,13 @@ tr.row-valid { background: white; }
         <!-- helper text — P4/Regular, #5e6463 -->
         <div class="file-upload-info mt-8" id="dzInfo">
           Accepted file types: CSV, XLS, or XLSX<br>
-          Less than 20 MB · Up to 3,000 rows
+          Less than 20 MB
         </div>
       </div>
 
-      <div class="link-row" style="display:flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap;margin-top:var(--space-16);">
+      <div id="fileCardArea"></div>
+
+      <div class="link-row hidden" id="exportExistingRow" style="display:flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap;margin-top:var(--space-16);">
         <button type="button" class="link-tertiary" id="downloadUploadedBtn" onclick="exportExistingList()">
           <svg style="display:block;width:20px;height:20px;flex-shrink:0;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span id="exportExistingLabel">Export existing vendor list for bulk editing</span>
@@ -1172,8 +1191,6 @@ tr.row-valid { background: white; }
           </span>
         </span>
       </div>
-
-      <div id="fileCardArea"></div>
 
       <div class="wizard-footer">
         <button class="btn btn-tertiary btn-md" onclick="goTo(1)"><span class="btn-icon-el">←</span><span>Back</span></button>
@@ -1796,6 +1813,11 @@ function renderDashboardTable(){
 
 /* ── PAYOUT SETUP SCREEN (precedes the migration wizard) ── */
 function completePayoutLater(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-intro').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function startDataMigration(){
   document.getElementById('wizardShell').classList.remove('hidden');
   goTo(1);
 }
@@ -1901,6 +1923,7 @@ function applyFile(file, rows){
     </div>`);
   document.getElementById('s2next').disabled=false;
   document.getElementById('fileInput').value='';
+  document.getElementById('exportExistingRow').classList.remove('hidden');
 }
 function exportExistingList(){
   const type = S.type==='ticket' ? 'ticket' : 'vendor';
@@ -1921,10 +1944,11 @@ function removeFile(){
   document.getElementById('dropzone').classList.remove('hidden');
   _sh('dzEmoji','<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>');
   _s('dzSelect','Select files');
-  _sh('dzInfo','Accepted file types: CSV, XLS, or XLSX<br>Less than 20 MB · Up to 3,000 rows');
+  _sh('dzInfo','Accepted file types: CSV, XLS, or XLSX<br>Less than 20 MB');
   _sh('fileCardArea','');
   document.getElementById('s2next').disabled=true;
   document.getElementById('fileInput').value='';
+  document.getElementById('exportExistingRow').classList.add('hidden');
 }
 
 /* ── STEP 3 — MAP ── */
