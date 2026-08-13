@@ -1414,7 +1414,7 @@ tr.row-valid { background: white; }
         <div class="result-summary-header">
           <span class="result-summary-title">Summary</span>
           <div class="result-summary-actions">
-            <button class="link" style="text-decoration:underline;" onclick="toast('Opening vendors…','info')">View vendor list</button>
+            <button class="link" style="text-decoration:underline;" onclick="openCrmDashboard()" id="resultViewListBtn">View vendor list</button>
           </div>
         </div>
         <div class="result-summary-stats">
@@ -1448,13 +1448,13 @@ tr.row-valid { background: white; }
           </div>
           <div class="next-step-title">View your CRM dashboard</div>
           <div class="next-step-desc" id="dashCardDesc">See every vendor you just imported, organized and searchable in one place.</div>
-          <button class="btn btn-secondary btn-sm" onclick="openDashboard()"><span>Open dashboard</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
+          <button class="btn btn-secondary btn-sm" onclick="openCrmDashboard()"><span>Open dashboard</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
         </div>
       </div>
 
       <div class="result-actions">
         <button class="btn btn-tertiary btn-md" onclick="resetWizard()"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span><span>Import more data</span></button>
-        <button class="btn btn-secondary btn-md" onclick="toast('Opening vendors…','info')"><span>Go to vendor list</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
+        <button class="btn btn-secondary btn-md" onclick="openCrmDashboard()" id="resultGoToListBtn"><span>Go to vendor list</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
       </div>
     </div>
   </div>
@@ -1978,6 +1978,272 @@ function renderDashboardTable(){
       <td>${r.date}</td>
       <td>${statusPill[r.status]}</td>
     </tr>`).join(''));
+}
+
+/* ── CRM DASHBOARD — type-specific vendor / ticket purchaser record list ──
+   Reached from Step 6 "View your CRM dashboard" / "Open dashboard". This is
+   the actual imported-records view (as opposed to the "Data imports" hub
+   above, which tracks import jobs) — built around what an EO actually does
+   with a freshly imported list: search it, select some rows, and reach out
+   in bulk (email) or pull them into another tool (export). ── */
+let crmType = 'vendor';
+let crmSearchTerm = '';
+let crmPage = 1;
+let crmPageSize = 20;
+let crmSelected = new Set(); // holds row numbers selected on the current filtered set
+
+function crmRows(){ return crmType === 'ticket' ? allTicketRows : allRows; }
+
+function openCrmDashboard(){
+  crmType = S.type === 'ticket' ? 'ticket' : 'vendor';
+  crmSearchTerm = '';
+  crmPage = 1;
+  crmSelected = new Set();
+  const searchInput = document.getElementById('crmSearchInput');
+  if(searchInput) searchInput.value = '';
+  const wrap = document.getElementById('crmSearchWrap');
+  if(wrap) wrap.classList.remove('has-value');
+
+  const sp = document.getElementById('stepProgress');
+  if(sp) sp.classList.add('hidden');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-crm').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  renderCrmDashboard();
+}
+
+function renderCrmDashboard(){
+  const isTicket = crmType === 'ticket';
+  const rows = crmRows();
+
+  _s('crmTitle', isTicket ? 'Ticket purchasers' : 'Vendors');
+  _s('crmDesc', isTicket
+    ? 'Everyone who bought a ticket to your event. Search the list, then message or export the purchasers you need.'
+    : 'Every vendor imported into your account. Search the list, then message or export the vendors you need.');
+
+  // ── Stat cards — the numbers an EO actually cares about right after an import ──
+  let statsHtml = '';
+  if(isTicket){
+    const totalTickets = rows.length;
+    const revenue = rows.reduce((sum,r)=>{
+      const n = parseFloat(String(r.price||'').replace(/[^0-9.]/g,''));
+      return sum + (isNaN(n) ? 0 : n);
+    }, 0);
+    const uniquePurchasers = new Set(rows.map(r=>(r.email||'').toLowerCase()).filter(Boolean)).size;
+    statsHtml = `
+      <div class="crm-stat-card"><div class="crm-stat-value">${totalTickets.toLocaleString()}</div><div class="crm-stat-label">Tickets sold</div></div>
+      <div class="crm-stat-card"><div class="crm-stat-value">$${revenue.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="crm-stat-label">Total revenue</div></div>
+      <div class="crm-stat-card"><div class="crm-stat-value">${uniquePurchasers.toLocaleString()}</div><div class="crm-stat-label">Unique purchasers</div></div>`;
+  } else {
+    const totalVendors = rows.length;
+    const withEmail = rows.filter(r=>r.email).length;
+    const tagged = rows.filter(r=>r.tags).length;
+    statsHtml = `
+      <div class="crm-stat-card"><div class="crm-stat-value">${totalVendors.toLocaleString()}</div><div class="crm-stat-label">Total vendors</div></div>
+      <div class="crm-stat-card"><div class="crm-stat-value">${withEmail.toLocaleString()}</div><div class="crm-stat-label">With email on file</div></div>
+      <div class="crm-stat-card"><div class="crm-stat-value">${tagged.toLocaleString()}</div><div class="crm-stat-label">Tagged (VIP, Featured…)</div></div>`;
+  }
+  _sh('crmStatGrid', statsHtml);
+
+  // ── Table header — vendor vs. ticket purchaser columns ──
+  const theadHtml = isTicket
+    ? `<tr><th style="width:24px;"></th><th>Purchaser name</th><th>Email</th><th>Ticket name</th><th>Price</th><th>Purchase date</th><th>Status</th></tr>`
+    : `<tr><th style="width:24px;"></th><th>Name</th><th>Business</th><th>Email</th><th>Tags</th><th>Status</th></tr>`;
+  _sh('crmThead', theadHtml);
+
+  renderCrmTable();
+}
+
+function crmTagsCell(r){
+  if(!r.tags) return `<span class="cell-muted">—</span>`;
+  return r.tags.split(',').map(t=>t.trim()).filter(Boolean)
+    .map(t=>`<span class="tag" style="margin-right:var(--space-4);">${t}</span>`).join('');
+}
+function crmCheckboxCell(r){
+  const checked = crmSelected.has(r.row) ? ' checked' : '';
+  return `<td><label class="ds-checkbox-wrap" style="position:relative;">
+      <input type="checkbox" class="ds-checkbox-input" ${checked} onchange="toggleCrmRow(${r.row}, this.checked)">
+      <span class="ds-checkbox-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    </label></td>`;
+}
+
+function renderCrmTable(){
+  const isTicket = crmType === 'ticket';
+  const all = crmRows();
+  const term = crmSearchTerm.toLowerCase();
+  const filtered = !term ? all : all.filter(r=>{
+    const haystack = isTicket
+      ? [r.firstName,r.lastName,r.email,r.ticketName].filter(Boolean).join(' ').toLowerCase()
+      : [r.firstName,r.lastName,r.email,r.biz].filter(Boolean).join(' ').toLowerCase();
+    return haystack.includes(term);
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / crmPageSize));
+  if(crmPage > totalPages) crmPage = totalPages;
+  if(crmPage < 1) crmPage = 1;
+  const startIdx = (crmPage - 1) * crmPageSize;
+  const pageRows = filtered.slice(startIdx, startIdx + crmPageSize);
+
+  const shownFrom = filtered.length === 0 ? 0 : startIdx + 1;
+  const shownTo   = Math.min(startIdx + crmPageSize, filtered.length);
+  _s('crmPgSummary', `Showing ${shownFrom.toLocaleString()}-${shownTo.toLocaleString()} of ${filtered.length.toLocaleString()}`);
+  _s('crmPgOf', 'of ' + totalPages);
+  const pageSelect = document.getElementById('crmPageSelect');
+  if(pageSelect){
+    pageSelect.innerHTML = Array.from({length: totalPages}, (_,i) => i+1)
+      .map(p => `<option value="${p}"${p===crmPage?' selected':''}>${p}</option>`).join('');
+  }
+  const prevBtn = document.getElementById('crmPgPrev');
+  const nextBtn = document.getElementById('crmPgNext');
+  if(prevBtn) prevBtn.disabled = crmPage <= 1;
+  if(nextBtn) nextBtn.disabled = crmPage >= totalPages;
+
+  if(!pageRows.length){
+    const colspan = isTicket ? 7 : 6;
+    _sh('crmBody', `<tr><td colspan="${colspan}" style="text-align:center;color:var(--color-text-secondary);padding:var(--space-24);">No records match your search.</td></tr>`);
+  } else if(isTicket){
+    const statusPill = {
+      Active:    '<span class="status-pill approved status-pill-icon"><span class="dash-status-dot complete"></span>Active</span>',
+      Refunded:  '<span class="status-pill awaiting status-pill-icon"><span class="dash-status-dot processing"></span>Refunded</span>',
+      Cancelled: '<span class="status-pill withdrawn status-pill-icon"><span class="dash-status-dot failed"></span>Cancelled</span>',
+    };
+    _sh('crmBody', pageRows.map(r => `<tr>
+        ${crmCheckboxCell(r)}
+        <td>${[r.firstName,r.lastName].filter(Boolean).join(' ') || '<span class="cell-muted">—</span>'}</td>
+        <td class="crm-row-email">${r.email || '<span class="cell-muted">—</span>'}</td>
+        <td>${r.ticketName || '<span class="cell-muted">—</span>'}</td>
+        <td>${r.price}</td>
+        <td>${r.purchaseDate}</td>
+        <td>${statusPill[r.status] || r.status}</td>
+      </tr>`).join(''));
+  } else {
+    _sh('crmBody', pageRows.map(r => `<tr>
+        ${crmCheckboxCell(r)}
+        <td>${[r.firstName,r.lastName].filter(Boolean).join(' ') || '<span class="cell-muted">—</span>'}</td>
+        <td>${r.biz || '<span class="cell-muted">—</span>'}</td>
+        <td class="crm-row-email">${r.email || '<span class="cell-muted">—</span>'}</td>
+        <td>${crmTagsCell(r)}</td>
+        <td><span class="status-pill approved status-pill-icon"><span class="dash-status-dot complete"></span>Active</span></td>
+      </tr>`).join(''));
+  }
+
+  updateCrmSelectAllState(filtered);
+  updateCrmToolbarState();
+}
+
+function updateCrmSelectAllState(filtered){
+  const selectAll = document.getElementById('crmSelectAll');
+  if(!selectAll) return;
+  const startIdx = (crmPage - 1) * crmPageSize;
+  const pageRows = filtered.slice(startIdx, startIdx + crmPageSize);
+  const allChecked = pageRows.length > 0 && pageRows.every(r => crmSelected.has(r.row));
+  selectAll.checked = allChecked;
+}
+
+function updateCrmToolbarState(){
+  const count = crmSelected.size;
+  _s('crmSelectedLabel', count + ' selected');
+  const emailBtn  = document.getElementById('crmEmailBtn');
+  const exportBtn = document.getElementById('crmExportBtn');
+  if(emailBtn)  emailBtn.disabled  = count === 0;
+  if(exportBtn) exportBtn.disabled = count === 0;
+}
+
+function toggleCrmRow(rowNum, checked){
+  if(checked) crmSelected.add(rowNum);
+  else crmSelected.delete(rowNum);
+  updateCrmSelectAllState(applyCrmFilter());
+  updateCrmToolbarState();
+}
+
+function applyCrmFilter(){
+  const isTicket = crmType === 'ticket';
+  const all = crmRows();
+  const term = crmSearchTerm.toLowerCase();
+  if(!term) return all;
+  return all.filter(r=>{
+    const haystack = isTicket
+      ? [r.firstName,r.lastName,r.email,r.ticketName].filter(Boolean).join(' ').toLowerCase()
+      : [r.firstName,r.lastName,r.email,r.biz].filter(Boolean).join(' ').toLowerCase();
+    return haystack.includes(term);
+  });
+}
+
+function toggleCrmSelectAll(checked){
+  const filtered = applyCrmFilter();
+  const startIdx = (crmPage - 1) * crmPageSize;
+  const pageRows = filtered.slice(startIdx, startIdx + crmPageSize);
+  pageRows.forEach(r => { if(checked) crmSelected.add(r.row); else crmSelected.delete(r.row); });
+  renderCrmTable();
+}
+
+function filterCrmRows(term){
+  crmSearchTerm = term;
+  crmPage = 1;
+  const wrap = document.getElementById('crmSearchWrap');
+  if(wrap) wrap.classList.toggle('has-value', !!term);
+  renderCrmTable();
+}
+function clearCrmSearch(){
+  crmSearchTerm = '';
+  crmPage = 1;
+  const input = document.getElementById('crmSearchInput');
+  if(input) input.value = '';
+  const wrap = document.getElementById('crmSearchWrap');
+  if(wrap) wrap.classList.remove('has-value');
+  renderCrmTable();
+}
+function setCrmPageSize(value){
+  crmPageSize = parseInt(value, 10) || 20;
+  crmPage = 1;
+  renderCrmTable();
+}
+function goToCrmPage(value){
+  crmPage = parseInt(value, 10) || 1;
+  renderCrmTable();
+}
+function crmPrevPage(){
+  if(crmPage > 1){ crmPage--; renderCrmTable(); }
+}
+function crmNextPage(){
+  crmPage++;
+  renderCrmTable();
+}
+
+function exportCrmSelected(){
+  const count = crmSelected.size;
+  if(!count) return;
+  const noun = crmType === 'ticket' ? 'ticket purchaser' : 'vendor';
+  toast(`Exporting ${count} ${noun}${count===1?'':'s'} to CSV…`, 'success');
+}
+
+/* ── Bulk email — the thing an EO most wants to do with a fresh list of contacts ── */
+function openCrmEmailModal(){
+  const count = crmSelected.size;
+  if(!count) return;
+  const noun = crmType === 'ticket' ? 'ticket purchaser' : 'vendor';
+  _s('crmEmailModalTitle', `Email ${count} ${noun}${count===1?'':'s'}`);
+  const subjectInput = document.getElementById('crmEmailSubject');
+  const bodyInput = document.getElementById('crmEmailBody');
+  if(subjectInput && !subjectInput.value){
+    subjectInput.value = crmType === 'ticket' ? 'See you at the event!' : 'Welcome — you\'re all set as a vendor';
+  }
+  if(bodyInput && !bodyInput.value){
+    bodyInput.value = crmType === 'ticket'
+      ? 'Hi there,\n\nThanks for grabbing a ticket — we can\'t wait to see you! Here\'s everything you need to know before the big day...'
+      : 'Hi there,\n\nWelcome aboard! We\'re excited to have you as a vendor at our upcoming event. Here\'s what to expect next...';
+  }
+  document.getElementById('crmEmailModalBackdrop').classList.remove('hidden');
+}
+function closeCrmEmailModal(){
+  document.getElementById('crmEmailModalBackdrop').classList.add('hidden');
+}
+function sendCrmBulkEmail(){
+  const count = crmSelected.size;
+  const noun = crmType === 'ticket' ? 'ticket purchaser' : 'vendor';
+  closeCrmEmailModal();
+  toast(`Email sent to ${count} ${noun}${count===1?'':'s'}`, 'success');
 }
 
 /* ── PAYOUT SETUP SCREEN (precedes the migration wizard) ── */
@@ -2809,6 +3075,8 @@ document.addEventListener('keydown',e=>{
     if(bd && !bd.classList.contains('hidden')) closeOverwriteModal();
     const brd=document.getElementById('bulkReplaceBackdrop');
     if(brd && !brd.classList.contains('hidden')) closeBulkReplacePanel();
+    const emd=document.getElementById('crmEmailModalBackdrop');
+    if(emd && !emd.classList.contains('hidden')) closeCrmEmailModal();
   }
 });
 
@@ -2878,6 +3146,8 @@ function showResults(){
   _s('resultTitle', failCount>0 ? 'Setup complete — some rows need attention' : 'Account setup complete');
   _s('resultSub', S.type==='ticket' ? 'Your ticket purchaser data is now in Eventeny.' : 'Your vendor data is now in Eventeny.');
   _s('dashCardDesc', S.type==='ticket' ? 'See every ticket purchaser you just imported, organized and searchable in one place.' : 'See every vendor you just imported, organized and searchable in one place.');
+  _s('resultViewListBtn', S.type==='ticket' ? 'View ticket purchaser list' : 'View vendor list');
+  _s('resultGoToListBtn', S.type==='ticket' ? 'Go to ticket purchaser list' : 'Go to vendor list');
   _s('r-imp',  validCount);
   _s('r-skip', skipCount);
   _s('r-fail', failCount);
