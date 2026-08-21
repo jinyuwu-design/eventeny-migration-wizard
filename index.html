@@ -483,48 +483,13 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 .status-pill.rejected  {background:#f7d7dc;}
 .status-pill.waitlisted{background:#e9f1f9;}
 .status-pill.withdrawn {background:#f5f6f6;}
-.status-pill-clickable{border:none;cursor:pointer;font-family:inherit;}
-.status-pill-clickable:hover{filter:brightness(0.95);}
 .cell-muted{color:var(--color-border-default);}
 
-/* ── SIDE PANEL — new DS component (slide-out drawer), used here for "Replace column values in bulk" ──
-   Chrome (header/back-arrow/close/footer) modeled on Eventeny's existing side-panel pattern
-   (e.g. "Create custom field"); no exact Figma node was available for this, composed from
-   existing modal/button/input tokens already documented in this file. ── */
-.side-panel-backdrop{position:fixed;inset:0;background:var(--color-bg-overlay);z-index:1100;display:flex;justify-content:flex-end;}
-.side-panel-backdrop.hidden{display:none;}
-.side-panel{background:white;width:560px;max-width:100%;height:100%;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.15);animation:sidePanelIn .25s ease;}
-@keyframes sidePanelIn{from{transform:translateX(100%);}to{transform:translateX(0);}}
-.side-panel-header{display:flex;align-items:flex-start;gap:var(--space-12);padding:var(--space-24);border-bottom:var(--stroke-1) solid var(--grey-200);flex-shrink:0;}
-.side-panel-back{background:none;border:none;padding:var(--space-4);cursor:pointer;color:var(--color-text-primary);display:flex;align-items:center;flex-shrink:0;margin-top:2px;}
-.side-panel-header-text{flex:1;min-width:0;}
-.side-panel-title{font-size:var(--font-size-p1);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);display:flex;align-items:center;gap:var(--space-8);}
-.side-panel-desc{font-size:var(--font-size-p3);color:var(--color-text-secondary);margin-top:var(--space-4);}
-.side-panel-close{background:none;border:none;padding:var(--space-6);border-radius:var(--radius-6);cursor:pointer;color:var(--grey-500);display:flex;flex-shrink:0;}
-.side-panel-close:hover{background:var(--grey-50);}
-.side-panel-body{flex:1;overflow-y:auto;padding:var(--space-24);min-height:0;}
-.side-panel-footer{display:flex;justify-content:flex-end;gap:var(--space-12);padding:var(--space-16) var(--space-24);border-top:var(--stroke-1) solid var(--grey-200);flex-shrink:0;}
-
-/* Replace-column-values table, inside the side panel body.
-   Header + all data rows share ONE grid (grid-template-columns declared once, on the shared
-   parent) so every row's column widths are locked in sync — a separate grid per row would let
-   each row's tracks size independently off its own content, producing mismatched widths. */
-.replace-table-wrap{border:var(--stroke-1) solid var(--grey-200);border-radius:var(--radius-8);overflow:hidden;}
-.replace-grid{display:grid;grid-template-columns:1fr 24px 1fr;column-gap:var(--space-16);}
-.replace-table-header{padding:var(--space-12) var(--space-16);background:var(--grey-50);border-bottom:var(--stroke-1) solid var(--grey-200);font-size:var(--font-size-p4);font-weight:var(--font-weight-semibold);color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.03em;}
-.replace-table-header > span{display:flex;align-items:center;}
-#bulkReplaceRows{padding:0 var(--space-16);}
-.replace-cell{padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:flex-start;}
-.replace-cell-arrow{position:relative;}
-.replace-cell-arrow svg{position:absolute;top:36px;left:50%;transform:translate(-50%,-50%);margin:0;}
-/* Column-value display box matches the DS Text Field height (h:40) so it lines up with the input beside it */
-.replace-original{background:var(--grey-50);border:1px solid var(--grey-200);border-radius:var(--radius-4);padding:0 var(--space-12);font-size:var(--font-size-p2);color:var(--color-text-secondary);height:40px;display:flex;align-items:center;}
-.replace-original-count{font-size:var(--font-size-p4);color:var(--color-status-negative);margin-top:var(--space-4);transition:color .15s;}
-.replace-original-count.is-valid{color:var(--color-text-secondary);}
-.replace-arrow{display:flex;align-items:center;justify-content:center;color:var(--grey-400);height:40px;}
+/* .replace-input — originally the bulk-replace side panel's text field style; the side panel
+   itself was removed (data-correction UI is no longer part of this flow), but this input style
+   is still reused by the CRM dashboard's bulk-email modal (subject/message fields). */
 .replace-input{width:100%;height:40px;padding:0 var(--space-12);border:1.5px solid var(--color-border-default);border-radius:var(--radius-4);font-family:var(--font-family-primary);font-size:var(--font-size-p2);color:var(--color-text-primary);box-sizing:border-box;}
 .replace-input:focus{outline:none;border-color:var(--color-status-brand-primary);}
-.replace-actions-row{display:flex;align-items:center;justify-content:space-between;padding:var(--space-16) 0 0;}
 
 /* Tag */
 /* TAG — Figma node 313:1039 (Primary) + 788:1092 (Secondary)
@@ -708,52 +673,6 @@ tr.row-valid { background: white; }
 .mascot-caption{font-size:var(--font-size-p2);font-weight:var(--font-weight-medium);color:var(--color-status-brand-primary);margin-bottom:var(--space-16);min-height:24px;animation:captionFade 0.4s ease;}
 @keyframes captionFade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── STEP 6 — NEXT STEPS CARDS (CRM dashboard + marketing CTA)
-   Built from existing DS tokens already used throughout this file:
-   card border/radius pattern, btn components, teal-50/teal-500 semantics ── */
-.next-steps-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-16);
-}
-.next-step-card {
-  border: var(--stroke-1) solid var(--color-border-default);
-  border-radius: var(--radius-8);
-  padding: var(--space-24);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-8);
-}
-.next-step-highlight {
-  border-color: var(--color-status-brand-primary);
-  background: var(--teal-50);
-}
-.next-step-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-4);
-}
-.next-step-title {
-  font-size: var(--font-size-p2);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
-}
-.next-step-desc {
-  font-size: var(--font-size-p3);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-8);
-}
-.next-step-card { width: 100%; align-self: stretch; }
-.next-step-card .btn { min-width: unset !important; width: 100% !important; }
-@media (max-width: 768px) {
-  .next-steps-grid { grid-template-columns: 1fr; }
-}
-
 /* ============================================================
    RESPONSIVE — mobile-first breakpoints
    768px = tablet, 480px = mobile
@@ -809,14 +728,12 @@ tr.row-valid { background: white; }
   }
   .wizard-footer-group .btn { width: 100%; }
 
-  /* Modal / side-panel footers — same full-width stacking treatment */
-  .modal-footer,
-  .side-panel-footer {
+  /* Modal footers — full-width stacking treatment */
+  .modal-footer {
     flex-direction: column-reverse;
     align-items: stretch;
   }
-  .modal-footer .btn,
-  .side-panel-footer .btn { width: 100%; }
+  .modal-footer .btn { width: 100%; }
 
   /* Result actions — stack */
   .result-actions { flex-direction: column; align-items: stretch; }
@@ -1173,7 +1090,7 @@ tr.row-valid { background: white; }
     <div class="card">
       <div class="mb-24">
         <h1 class="card-title" id="uploadTitle">Upload your vendor list</h1>
-        <p class="card-desc">CSV, XLS, or XLSX. Max 20 MB per file. Upload again anytime to replace this file with a newer version before you import.</p>
+        <p class="card-desc">CSV, XLS, or XLSX. We recommend keeping files to 20 MB or smaller, though there's no hard limit. Upload again anytime to replace this file with a newer version before you import.</p>
       </div>
 
       <div class="link-row" style="display:flex;flex-direction:row;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
@@ -1208,7 +1125,7 @@ tr.row-valid { background: white; }
         <!-- helper text — P4/Regular, #5e6463 -->
         <div class="file-upload-info mt-8" id="dzInfo">
           Accepted file types: CSV, XLS, or XLSX<br>
-          Less than 20 MB
+          20 MB or smaller is recommended — no hard size limit
         </div>
       </div>
 
@@ -1253,7 +1170,6 @@ tr.row-valid { background: white; }
         </div>
         <select class="map-select" id="mapSortSelect" style="width:220px;flex-shrink:0;" onchange="sortMapRows(this.value)">
           <option value="default">Sort by status</option>
-          <option value="errors">Most errors first</option>
           <option value="notfound">Not found</option>
           <option value="mapped">Mapped</option>
           <option value="skipped">Skipped</option>
@@ -1269,7 +1185,6 @@ tr.row-valid { background: white; }
               <th style="text-align:center;width:24px;">→</th>
               <th>Eventeny properties</th>
               <th>Match</th>
-              <th>Data status</th>
             </tr>
           </thead>
           <tbody id="mapBody"></tbody>
@@ -1302,67 +1217,6 @@ tr.row-valid { background: white; }
   </div>
 
   <!-- ═══════════════════════════════════════ -->
-  <!-- STEP 4 — REVIEW DATA (vendor imports skip this screen entirely; tickets keep it) -->
-  <!-- ═══════════════════════════════════════ -->
-  <div class="screen" id="screen-4">
-    <div class="card">
-      <div class="mb-24">
-        <h1 class="card-title screen-title">Review your data</h1>
-        <p class="card-desc screen-desc">Errors and flagged rows are shown first. Double-click any cell to edit. Fix issues inline before importing.</p>
-      </div>
-
-      <!-- Search + sort -->
-      <div style="display:flex;align-items:center;gap:var(--space-12);flex-wrap:wrap;margin-bottom:var(--space-16);">
-        <div class="map-search" id="reviewSearchWrap" style="margin-bottom:0;flex:1;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="reviewSearchInput" placeholder="Search name, email, business…" oninput="filterReviewSearch(this.value)">
-          <button class="map-search-clear" onclick="clearReviewSearch()" title="Clear"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-        </div>
-        <select class="map-select" id="reviewSortSelect" style="width:220px;flex-shrink:0;" onchange="sortReviewRows(this.value)">
-          <option value="default">Sort by status</option>
-          <option value="error">Errors</option>
-          <option value="valid">Valid</option>
-        </select>
-      </div>
-
-      <!-- Unified table — flagged rows first -->
-      <div class="table-wrap">
-        <table class="data-table" id="reviewTable">
-          <thead id="reviewThead"></thead>
-          <tbody id="reviewBody"></tbody>
-        </table>
-      </div>
-
-      <span class="pg-summary" id="reviewPgSummary">Showing 1-50 of 2,418</span>
-      <div class="pagination-bar">
-        <div class="pg-rows-per-page">
-          <span>Rows per page</span>
-          <select class="pg-select" id="reviewPageSizeSelect" onchange="setReviewPageSize(this.value)">
-            <option value="25">25</option>
-            <option value="50" selected>50</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
-          </select>
-        </div>
-        <div class="pg-page-group">
-          <button type="button" class="pg-icon-btn" id="reviewPgPrev" onclick="reviewPrevPage()" title="Previous page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.62918 10.9458L14.2892 5.2958C14.3821 5.20207 14.4927 5.12768 14.6146 5.07691C14.7365 5.02614 14.8672 5 14.9992 5C15.1312 5 15.2619 5.02614 15.3838 5.07691C15.5056 5.12768 15.6162 5.20207 15.7092 5.2958C15.8954 5.48316 16 5.73661 16 6.0008C16 6.26498 15.8954 6.51844 15.7092 6.7058L10.7592 11.7058L15.7092 16.6558C15.8954 16.8432 16 17.0966 16 17.3608C16 17.625 15.8954 17.8784 15.7092 18.0658C15.6166 18.1603 15.5061 18.2355 15.3842 18.287C15.2624 18.3384 15.1315 18.3652 14.9992 18.3658C14.8669 18.3652 14.736 18.3384 14.6141 18.287C14.4922 18.2355 14.3818 18.1603 14.2892 18.0658L8.62918 12.4158C8.52767 12.3222 8.44666 12.2085 8.39126 12.082C8.33585 11.9555 8.30724 11.8189 8.30724 11.6808C8.30724 11.5427 8.33585 11.4061 8.39126 11.2796C8.44666 11.1531 8.52767 11.0394 8.62918 10.9458Z" fill="currentColor"/></svg></button>
-          <select class="pg-select" id="reviewPageSelect" onchange="goToReviewPage(this.value)"></select>
-          <span class="pg-page-of" id="reviewPgOf">of 49</span>
-          <button type="button" class="pg-icon-btn" id="reviewPgNext" onclick="reviewNextPage()" title="Next page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></button>
-        </div>
-      </div>
-
-      <div class="wizard-footer">
-        <button class="btn btn-tertiary btn-md" onclick="goTo(3)"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.62918 10.9458L14.2892 5.2958C14.3821 5.20207 14.4927 5.12768 14.6146 5.07691C14.7365 5.02614 14.8672 5 14.9992 5C15.1312 5 15.2619 5.02614 15.3838 5.07691C15.5056 5.12768 15.6162 5.20207 15.7092 5.2958C15.8954 5.48316 16 5.73661 16 6.0008C16 6.26498 15.8954 6.51844 15.7092 6.7058L10.7592 11.7058L15.7092 16.6558C15.8954 16.8432 16 17.0966 16 17.3608C16 17.625 15.8954 17.8784 15.7092 18.0658C15.6166 18.1603 15.5061 18.2355 15.3842 18.287C15.2624 18.3384 15.1315 18.3652 14.9992 18.3658C14.8669 18.3652 14.736 18.3384 14.6141 18.287C14.4922 18.2355 14.3818 18.1603 14.2892 18.0658L8.62918 12.4158C8.52767 12.3222 8.44666 12.2085 8.39126 12.082C8.33585 11.9555 8.30724 11.8189 8.30724 11.6808C8.30724 11.5427 8.33585 11.4061 8.39126 11.2796C8.44666 11.1531 8.52767 11.0394 8.62918 10.9458Z" fill="currentColor"/></svg></span><span>Back to mapping</span></button>
-        <div class="wizard-footer-group" style="display:flex;gap:var(--space-12);align-items:center;flex-wrap:wrap;">
-          <button class="btn btn-secondary btn-md" onclick="goTo(2)"><span>Re-upload fixed file</span></button>
-          <button class="btn btn-primary btn-md" onclick="openOverwriteModal()"><span>Next</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════ -->
   <!-- STEP 5 — IMPORT (progress only) -->
   <!-- ═══════════════════════════════════════ -->
   <div class="screen" id="screen-5">
@@ -1372,29 +1226,48 @@ tr.row-valid { background: white; }
         <p class="card-desc" id="importDesc" style="text-align:center;">This usually takes less than a minute. Don't close this tab.</p>
       </div>
 
-      <!-- Mascot + progress -->
-      <div style="text-align:center;padding:var(--space-16) 0;">
-        <div class="hourglass-loader" id="importEmoji" aria-hidden="true">
-          <div class="hg-body">
-            <div class="hg-cap hg-cap-top"></div>
-            <div class="hg-glass hg-glass-top"><div class="hg-sand hg-sand-top"></div></div>
-            <div class="hg-neck">
-              <span class="hg-grain hg-grain-1"></span>
-              <span class="hg-grain hg-grain-2"></span>
-              <span class="hg-grain hg-grain-3"></span>
+      <div id="importProgressBox">
+        <!-- Mascot + progress -->
+        <div style="text-align:center;padding:var(--space-16) 0;">
+          <div class="hourglass-loader" id="importEmoji" aria-hidden="true">
+            <div class="hg-body">
+              <div class="hg-cap hg-cap-top"></div>
+              <div class="hg-glass hg-glass-top"><div class="hg-sand hg-sand-top"></div></div>
+              <div class="hg-neck">
+                <span class="hg-grain hg-grain-1"></span>
+                <span class="hg-grain hg-grain-2"></span>
+                <span class="hg-grain hg-grain-3"></span>
+              </div>
+              <div class="hg-glass hg-glass-bottom"><div class="hg-sand hg-sand-bottom"></div></div>
+              <div class="hg-cap hg-cap-bottom"></div>
             </div>
-            <div class="hg-glass hg-glass-bottom"><div class="hg-sand hg-sand-bottom"></div></div>
-            <div class="hg-cap hg-cap-bottom"></div>
           </div>
+          <div class="mascot-caption" id="mascotCaption">Rolling your data in…</div>
+          <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+          <div class="progress-pct" id="pPct">0%</div>
         </div>
-        <div class="mascot-caption" id="mascotCaption">Rolling your data in…</div>
-        <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
-        <div class="progress-pct" id="pPct">0%</div>
+
+        <!-- Import log -->
+        <div class="import-log" id="importLog">
+          <div>▶ Starting migration job…</div>
+        </div>
       </div>
 
-      <!-- Import log -->
-      <div class="import-log" id="importLog">
-        <div>▶ Starting migration job…</div>
+      <!-- Shown instead of the progress box once a large import hands off to the background —
+           the real work (validating/writing thousands of rows) keeps running server-side. -->
+      <div class="hidden" id="importBackgroundBox">
+        <div class="alert alert-info" style="margin-bottom:var(--space-24);">
+          <div class="alert-inner">
+            <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+            <div>
+              <span class="alert-title">This import is bigger than usual</span>
+              <div>We'll keep running it in the background and email you as soon as it's done. Feel free to close this tab — you can check progress anytime from the Data imports hub.</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <button class="btn btn-secondary btn-md" onclick="openDashboard()"><span>Back to dashboard</span></button>
+        </div>
       </div>
     </div>
   </div>
@@ -1413,9 +1286,6 @@ tr.row-valid { background: white; }
       <div class="result-summary-card">
         <div class="result-summary-header">
           <span class="result-summary-title">Summary</span>
-          <div class="result-summary-actions">
-            <button class="link" style="text-decoration:underline;" onclick="openCrmDashboard()" id="resultViewListBtn">View vendor list</button>
-          </div>
         </div>
         <div class="result-summary-stats">
           <div class="result-stat"><div class="result-stat-label">Imported</div><div class="result-stat-value" id="r-imp">6</div></div>
@@ -1424,38 +1294,27 @@ tr.row-valid { background: white; }
         </div>
       </div>
 
-      <!-- Error report — only shown if failures occurred -->
-      <div class="alert alert-warning hidden" id="errReportBox">
+      <!-- Error banner — informational only; the action lives in the primary/secondary row below -->
+      <div class="alert alert-warning hidden" id="errReportBox" style="margin-bottom:var(--space-24);">
         <div class="alert-inner">
           <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></span>
           <div>
-            <span class="alert-title">Some rows failed to import</span>
-            <div>Download the error report to see what went wrong, fix those rows, and run another import.</div>
+            <span class="alert-title" id="errReportTitle">Some rows failed to import</span>
+            <div>Check the error report to see what went wrong, fix those rows, and run another import.</div>
           </div>
-        </div>
-        <button class="btn btn-secondary btn-sm" style="align-self:center;flex-shrink:0;" onclick="toast('Error report downloaded','info')"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Download error report CSV</span></button>
-      </div>
-
-      <!-- What's next — CRM dashboard + mass marketing CTAs -->
-      <div class="mb-16" style="margin-top:var(--space-32);">
-        <div class="section-title">What's next</div>
-      </div>
-      <div class="next-steps-grid">
-        <!-- CRM dashboard card -->
-        <div class="next-step-card">
-          <div class="next-step-icon" style="background:var(--teal-50);color:var(--color-status-brand-primary);">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-          </div>
-          <div class="next-step-title">View your CRM dashboard</div>
-          <div class="next-step-desc" id="dashCardDesc">See every vendor you just imported, organized and searchable in one place.</div>
-          <button class="btn btn-secondary btn-sm" onclick="openCrmDashboard()"><span>Open dashboard</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
         </div>
       </div>
 
+      <!-- Primary actions — upload more data is the main thing people do from here -->
       <div class="result-actions">
-        <button class="btn btn-tertiary btn-md" onclick="resetWizard()"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span><span>Import more data</span></button>
-        <button class="btn btn-secondary btn-md" onclick="openCrmDashboard()" id="resultGoToListBtn"><span>Go to vendor list</span><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></span></button>
+        <button class="btn btn-primary btn-md" onclick="resetWizard()"><span>Upload more data</span></button>
+        <button class="btn btn-secondary btn-md" id="checkErrorReportBtn" onclick="toast('Error report downloaded','info')"><span class="btn-icon-el"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span><span>Check error report</span></button>
       </div>
+
+      <!-- Quiet, secondary prompt into the CRM — not a competing call to action -->
+      <p class="card-desc" style="text-align:center;margin-top:var(--space-24);">
+        Want to see everything you just imported? <button type="button" class="link" style="text-decoration:underline;" onclick="openCrmDashboard()" id="resultViewListBtn">View vendor list</button>
+      </p>
     </div>
   </div>
 
@@ -2268,7 +2127,6 @@ function beginPayoutSetup(){
 /* ── NAVIGATION ── */
 function goTo(n) {
   if (n===3) { mapPage = 1; buildMap(); }
-  if (n===4) buildReview();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+n).classList.add('active');
   updateProgress(n);
@@ -2276,18 +2134,19 @@ function goTo(n) {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function updateProgress(n) {
-  const skipReview = S.type === 'vendor'; // vendor imports skip the "Review data" step
+  // The "Review data" step (4) no longer exists for either import type — data correction UI
+  // was removed, so mapping goes straight to the overwrite-confirmation modal / import.
   for (let i = 1; i <= 6; i++) {
     const step = document.getElementById('sp-' + i);
     const div  = document.getElementById('sd-' + i);
     let cls = 'sp-step';
     if (i < n)  cls = 'sp-step done';
     if (i === n) cls = 'sp-step active';
-    if (skipReview && i === 4) cls += ' hidden';
+    if (i === 4) cls += ' hidden';
     step.className = cls;
     if (div) {
       let dcls = i < n ? 'sp-divider done' : 'sp-divider';
-      if (skipReview && i === 3) dcls += ' hidden'; // the divider right before "Review data"
+      if (i === 3) dcls += ' hidden'; // the divider right before "Review data"
       div.className = dcls;
     }
   }
@@ -2307,13 +2166,9 @@ function selectType(t) {
   _s('exportExistingTooltip', 'Downloads a CSV of the '+(t==='vendor'?'vendors':'ticket purchasers')+' already in your Eventeny account, so you can edit them in bulk and re-upload the updated file here.');
 }
 function proceedFromMapping(){
-  // Vendor imports skip the Review data screen and go straight to the overwrite confirmation;
-  // ticket imports still get the full review/edit table first.
-  if(S.type === 'vendor'){
-    openOverwriteModal();
-  } else {
-    goTo(4);
-  }
+  // Both import types go straight from mapping to the overwrite-confirmation modal —
+  // there's no more Review data / correction step in between.
+  openOverwriteModal();
 }
 function selectDest(d) {
   S.dest=d;
@@ -2327,19 +2182,30 @@ function handleDragOver(e){e.preventDefault();document.getElementById('dropzone'
 function handleDragLeave(){document.getElementById('dropzone').classList.remove('drag-over');}
 function handleDrop(e){e.preventDefault();document.getElementById('dropzone').classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)processFile(f);}
 function handleFileSelect(e){const f=e.target.files[0];if(f)processFile(f);}
+// No hard file-size limit anymore. Large files just take longer to process, so instead of
+// Uploading is just a byte transfer — it's bounded by network speed and finishes quickly
+// regardless of file size, so there's no size-based branching here. The "this is a big job,
+// we'll email you" behavior lives at the Import step instead, since that's where the real
+// per-row work (validation, dedup, writing records) actually happens — see startImport().
+const LARGE_IMPORT_THRESHOLD = 20*1024*1024; // same "20MB recommended" figure shown in the upload copy
+
 function processFile(file){
   const errArea=document.getElementById('uploadErrArea');
   errArea.innerHTML='';
   const ext='.'+file.name.split('.').pop().toLowerCase();
   const errs=[];
   if(!['.csv','.xls','.xlsx'].includes(ext))errs.push('File type not supported. Please upload a CSV, XLS, or XLSX file.');
-  if(file.size>20*1024*1024)errs.push('File is too large ('+((file.size/1024/1024).toFixed(1))+' MB). Maximum is 20 MB.');
   if(errs.length){
     document.getElementById('dropzone').classList.add('has-error');
     errArea.innerHTML=errs.map(e=>`<div class="alert alert-error"><div class="alert-inner"><span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></span><div>${e}</div></div></div>`).join('');
     return;
   }
-  const rows=Math.floor(Math.random()*1200)+1800; // simulate large real-world imports (1,800–3,000 rows)
+  // Row count is a rough proxy for a real CSV row size (~220 bytes/row) — small files keep the
+  // original hand-tuned 1,800–3,000 range, larger files scale up so the Import step's "this is a
+  // big job" decision has a realistic number to reason about.
+  const baseRows = Math.floor(Math.random()*1200)+1800;
+  const estRows = Math.round(file.size / 220);
+  const rows = Math.max(baseRows, estRows);
   applyFile(file, rows);
 }
 function applyFile(file, rows){
@@ -2347,12 +2213,13 @@ function applyFile(file, rows){
   S.fileRows=rows;
   resetReviewEdits();
   document.getElementById('dropzone').classList.add('hidden');
+  const sizeLabel = file.size >= 1024*1024 ? (file.size/1024/1024).toFixed(1)+' MB' : (file.size/1024).toFixed(1)+' KB';
   _sh('fileCardArea',`
     <div class="file-card">
       <div class="file-card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
       <div style="flex:1">
         <div class="file-card-name">${file.name}</div>
-        <div class="file-card-meta">${(file.size/1024).toFixed(1)} KB · ~${rows} rows detected</div>
+        <div class="file-card-meta">${sizeLabel} · ~${rows.toLocaleString()} rows detected</div>
       </div>
       <button class="file-card-close" onclick="removeFile()" title="Remove this file"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`);
@@ -2379,7 +2246,7 @@ function removeFile(){
   document.getElementById('dropzone').classList.remove('hidden');
   _sh('dzEmoji','<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>');
   _s('dzSelect','Select files');
-  _sh('dzInfo','Accepted file types: CSV, XLS, or XLSX<br>Less than 20 MB');
+  _sh('dzInfo','Accepted file types: CSV, XLS, or XLSX<br>20 MB or smaller is recommended — no hard size limit');
   _sh('fileCardArea','');
   document.getElementById('s2next').disabled=true;
   document.getElementById('fileInput').value='';
@@ -2397,22 +2264,11 @@ function buildMap(){
   const opts=S.type==='vendor'?vendorOpts:ticketOpts;
   const notFound=S.type==='vendor'?['facebook','instagram','twitter','special_request','logo_url']:['phone','order_number','notes'];
 
-  // Data errors — count of flagged values per column (same count shown in the "Data status" pill)
-  const errCount = c => (c.errorValues||[]).reduce((sum,e)=>sum+e.rows,0);
-
   // Sort: either the manual "Sort by status" selection, or the default flagged-first order
   const sorted = [...cols].sort((a,b)=>{
     const isNF = c => notFound.includes(c.field) && !c.req;
     const isM  = c => !isNF(c);
 
-    if(mapSortBy === 'errors'){
-      // Columns with the most flagged/error values first, so they're the first thing you fix.
-      // Ties fall back to the default flagged-first ordering below.
-      const diff = errCount(b) - errCount(a);
-      if(diff !== 0) return diff;
-      const score = c => isNF(c) ? 0 : c.req ? 1 : c.field ? 2 : 3;
-      return score(a) - score(b);
-    }
     if(mapSortBy === 'notfound'){
       const score = c => isNF(c) ? 0 : 1;
       return score(a) - score(b);
@@ -2490,20 +2346,12 @@ function buildMap(){
       ? `<span class="status-pill awaiting status-pill-icon">${iconWarning}Not found</span>`
       : `<span class="status-pill approved status-pill-icon">${iconCheck}Mapped</span>`;
 
-    // Data status — detected format/validation issues in this column's values, if any.
-    // Clicking the pill opens the bulk "Replace column values" side panel (Figma-referenced pattern).
-    const errCount = (c.errorValues||[]).reduce((sum,e)=>sum+e.rows,0);
-    const dataStatusHtml = errCount > 0
-      ? `<button type="button" class="status-pill rejected status-pill-icon status-pill-clickable" onclick="openBulkReplacePanel('${c.field}')">${iconWarning}${errCount} error${errCount===1?'':'s'}</button>`
-      : `<span class="cell-muted">—</span>`;
-
     return `<tr${rowStyle}>
       <td>${colName}</td>
       <td>${previewHtml}</td>
       <td style="text-align:center;color:var(--color-text-secondary);font-size:18px;">→</td>
       <td><select class="map-select${isMatched?' auto':''}" onchange="onMapChange(this)">${optHtml}</select></td>
       <td>${matchText}</td>
-      <td>${dataStatusHtml}</td>
     </tr>`;
   }).join(''));
   _s('autoCount',auto);
@@ -2559,152 +2407,14 @@ function onMapChange(sel){
   }
 }
 
-/* ── Replace column values in bulk — side panel opened from the "N errors" data-status pill ── */
-let bulkReplaceField = null;
-let bulkReplaceRows = [];
-
-function openBulkReplacePanel(field){
-  const cols = S.type==='vendor' ? vendorCols : ticketCols;
-  const col = cols.find(c=>c.field===field);
-  if(!col || !col.errorValues || !col.errorValues.length) return;
-  bulkReplaceField = field;
-  bulkReplaceRows = col.errorValues.map(e=>({value:e.value, rows:e.rows, replacement:'', auto:true}));
-  const errCount = col.errorValues.reduce((s,e)=>s+e.rows,0);
-  _s('bulkReplaceDesc', `${errCount} row${errCount===1?'':'s'} in "${col.src}" have a value that couldn't be validated. Enter a replacement for each one below.`);
-  renderBulkReplaceRows();
-  document.getElementById('bulkReplaceBackdrop').classList.remove('hidden');
-}
-function closeBulkReplacePanel(){
-  document.getElementById('bulkReplaceBackdrop').classList.add('hidden');
-  bulkReplaceField = null;
-  bulkReplaceRows = [];
-}
-function renderBulkReplaceRows(){
-  // NOTE: cells render as direct children of the shared .replace-grid (#bulkReplaceRows) —
-  // no per-row wrapper — so column widths stay locked to the header across every row.
-  _sh('bulkReplaceRows', bulkReplaceRows.map((r,i)=>{
-    const displayValue = r.value === '' ? '<em style="color:var(--grey-400);font-style:italic;">(blank)</em>' : r.value;
-    const leftCell = r.auto
-      ? `<div class="replace-original">${displayValue}</div><div class="replace-original-count" id="replaceCount-${i}">${r.rows} row${r.rows===1?'':'s'} with this value</div>`
-      : `<input type="text" class="replace-input" placeholder="Value to find…" value="${r.value}" oninput="updateBulkReplaceRow(${i},'value',this.value)">`;
-    return `<div class="replace-cell">${leftCell}</div>
-      <div class="replace-cell replace-cell-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3708 10.9458L9.71079 5.2958C9.61783 5.20207 9.50723 5.12768 9.38537 5.07691C9.26351 5.02614 9.1328 5 9.00079 5C8.86878 5 8.73807 5.02614 8.61622 5.07691C8.49436 5.12768 8.38376 5.20207 8.29079 5.2958C8.10454 5.48316 8 5.73661 8 6.0008C8 6.26498 8.10454 6.51844 8.29079 6.7058L13.2408 11.7058L8.29079 16.6558C8.10454 16.8432 8 17.0966 8 17.3608C8 17.625 8.10454 17.8784 8.29079 18.0658C8.38341 18.1603 8.49385 18.2355 8.61573 18.287C8.7376 18.3384 8.86849 18.3652 9.00079 18.3658C9.1331 18.3652 9.26398 18.3384 9.38586 18.287C9.50773 18.2355 9.61818 18.1603 9.71079 18.0658L15.3708 12.4158C15.4723 12.3222 15.5533 12.2085 15.6087 12.082C15.6641 11.9555 15.6927 11.8189 15.6927 11.6808C15.6927 11.5427 15.6641 11.4061 15.6087 11.2796C15.5533 11.1531 15.4723 11.0394 15.3708 10.9458Z" fill="currentColor"/></svg></div>
-      <div class="replace-cell"><input type="text" class="replace-input" placeholder="Replacement value" value="${r.replacement}" oninput="updateBulkReplaceRow(${i},'replacement',this.value)"></div>`;
-  }).join(''));
-  bulkReplaceRows.forEach((_,i)=>updateReplaceRowValidity(i));
-}
-function updateBulkReplaceRow(i, key, val){
-  if(!bulkReplaceRows[i]) return;
-  bulkReplaceRows[i][key] = val;
-  if(key === 'replacement') updateReplaceRowValidity(i);
-}
-function isValidReplacementValue(field, val){
-  if(!val) return false;
-  const v = val.trim();
-  if(!v) return false;
-  if(field === 'email') return v.includes('@') && v.includes('.');
-  if(field === 'website') return v.includes('.');
-  return true;
-}
-function updateReplaceRowValidity(i){
-  const r = bulkReplaceRows[i];
-  const el = document.getElementById('replaceCount-'+i);
-  if(!r || !el) return;
-  el.classList.toggle('is-valid', isValidReplacementValue(bulkReplaceField, r.replacement));
-}
-function addBulkReplaceRow(){
-  bulkReplaceRows.push({value:'', rows:0, replacement:'', auto:false});
-  renderBulkReplaceRows();
-}
-function resetBulkReplaceChanges(){
-  bulkReplaceRows = bulkReplaceRows.filter(r=>r.auto).map(r=>({...r, replacement:''}));
-  renderBulkReplaceRows();
-}
-function applyBulkReplace(){
-  const filled = bulkReplaceRows.filter(r=>(r.auto || (r.value && r.value.trim())) && r.replacement && r.replacement.trim());
-  if(filled.length === 0){ toast('Enter at least one replacement value','info'); return; }
-
-  const cols = S.type==='vendor' ? vendorCols : ticketCols;
-  const col = cols.find(c=>c.field===bulkReplaceField);
-  let fixedCount = filled.reduce((s,r)=>s+(r.rows||0),0);
-  if(col){
-    const fixedValues = new Set(filled.map(r=>r.value));
-    const remaining = (col.errorValues||[]).filter(e=>!fixedValues.has(e.value));
-    col.errorValues = remaining;
-
-    // Log each replacement so it surfaces in the "Review import" modal — bulk fixes never touch
-    // individual row objects, so these are tracked as their own kind:'bulk' entries.
-    filled.forEach(r=>{
-      const key = 'bulk|' + bulkReplaceField + '|' + r.value;
-      reviewEdits.set(key, {
-        kind: 'bulk',
-        field: bulkReplaceField,
-        label: col.src,
-        original: r.value === '' ? '(blank)' : r.value,
-        current: r.replacement.trim(),
-        rowCount: r.rows || 0
-      });
-    });
-  }
-  toast(`Replaced ${fixedCount} value${fixedCount===1?'':'s'} in "${col ? col.src : 'this column'}"`, 'success');
-  closeBulkReplacePanel();
-  buildMap();
-}
-/* ── STEP 4 — REVIEW ── */
 // ── Safe DOM helpers — prevent null reference errors ──
 const _s  = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 const _sh = (id, v) => { const el = document.getElementById(id); if (el) el.innerHTML   = v; };
 const _sc = (id, c) => { const el = document.getElementById(id); if (el) el.className    = c; };
 const _sg = (id)    =>   document.getElementById(id);
-let reviewFilter = 'all';
-
-function filterRows(f, btn) {
-  reviewFilter = f;
-  document.querySelectorAll('.seg-item').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  renderReviewTable();
-}
-
-function buildReview() {
-  renderReviewTableHead();
-  renderReviewTable();
-}
 
 function currentReviewRows(){
   return S.type === 'ticket' ? allTicketRows : allRows;
-}
-
-function renderReviewTableHead(){
-  const thead = document.getElementById('reviewThead');
-  if(!thead) return;
-  if(S.type === 'ticket'){
-    thead.innerHTML = `<tr>
-      <th style="width:40px;">#</th>
-      <th>Purchaser first name</th>
-      <th>Purchaser last name</th>
-      <th>Purchaser email</th>
-      <th>Ticket name</th>
-      <th>Price</th>
-      <th>Purchase date</th>
-      <th style="width:80px;">Data status</th>
-    </tr>`;
-  } else {
-    thead.innerHTML = `<tr>
-      <th style="width:40px;">#</th>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Email</th>
-      <th>Business name</th>
-      <th><label style="display:flex;align-items:center;gap:var(--space-8);cursor:pointer;font-weight:var(--font-weight-medium);">
-        <span class="ds-checkbox-wrap" style="position:relative;">
-          <input type="checkbox" class="ds-checkbox-input" id="manageTagsAllCheck" onchange="toggleAllCreateTag(this.checked)">
-          <span class="ds-checkbox-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-        </span>
-        Manage tags
-      </label></th>
-      <th style="width:80px;">Data status</th>
-    </tr>`;
-  }
 }
 
 function getRowState(r) {
@@ -2712,310 +2422,11 @@ function getRowState(r) {
   return 'valid';
 }
 
-const VENDOR_FIELD_LABELS = {firstName:'First name', lastName:'Last name', email:'Email', biz:'Business name', addr1:'Street address', city:'City', state:'State', zip:'Zip code'};
-const TICKET_FIELD_LABELS = {firstName:'Purchaser first name', lastName:'Purchaser last name', email:'Purchaser email', ticketName:'Ticket name', price:'Price', purchaseDate:'Purchase date'};
-
-// Tracks manual corrections made on the Review data step, keyed by "row|field" —
-// original value is captured on first edit, current value updates on every subsequent edit.
+// Tracks manual corrections — no in-app correction UI exists anymore (side panel and the
+// Review Data screen were both removed), so this stays empty; kept only so the "Review import"
+// confirmation modal has a (now always-empty) source to read from.
 let reviewEdits = new Map();
 function resetReviewEdits(){ reviewEdits = new Map(); }
-
-let reviewSearchTerm = '';
-let reviewSortBy = 'default';
-let reviewPage = 1;
-let reviewPageSize = 50;
-
-function renderReviewTable() {
-  const isTicket = S.type === 'ticket';
-  const rows = currentReviewRows();
-
-  // Sort: manual "Sort by status" selection, or default errors-first order
-  const sorted = [...rows].sort((a,b) => {
-    const rank = r => getRowState(r) === 'error' ? 0 : 1;
-    if(reviewSortBy === 'error') return (rank(a)===0?0:1) - (rank(b)===0?0:1);
-    if(reviewSortBy === 'valid') return (rank(a)===1?0:1) - (rank(b)===1?0:1);
-    return rank(a) - rank(b); // default
-  });
-
-  const searchLower = reviewSearchTerm.toLowerCase();
-  const filtered = sorted.filter(r => {
-    if(reviewFilter === 'error' && getRowState(r) !== 'error') return false;
-    if(reviewFilter === 'valid' && getRowState(r) !== 'valid') return false;
-    if(searchLower){
-      const haystack = isTicket
-        ? [r.firstName,r.lastName,r.email,r.ticketName].filter(Boolean).join(' ').toLowerCase()
-        : [r.firstName,r.lastName,r.email,r.biz].filter(Boolean).join(' ').toLowerCase();
-      if(!haystack.includes(searchLower)) return false;
-    }
-    return true;
-  });
-
-  const errCount   = rows.filter(r => getRowState(r)==='error').length;
-  const validCount = rows.filter(r => getRowState(r)==='valid').length;
-
-  const _s = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
-  _s('r4-err',   errCount);
-  _s('r4-valid', validCount);
-  _s('r4-showing', filtered.length);
-  _s('r4-total',   rows.length);
-  _s('importLabel', validCount);
-  _s('r-imp',       validCount);
-
-  // ── Pagination — DS component (2,000-3,000-row imports can't render as one page) ──
-  const totalPages = Math.max(1, Math.ceil(filtered.length / reviewPageSize));
-  if(reviewPage > totalPages) reviewPage = totalPages;
-  if(reviewPage < 1) reviewPage = 1;
-  const startIdx = (reviewPage - 1) * reviewPageSize;
-  const pageRows = filtered.slice(startIdx, startIdx + reviewPageSize);
-
-  _sh('reviewBody', pageRows.map(r => isTicket ? buildTicketRow(r) : buildRow(r)).join(''));
-
-  const shownFrom = filtered.length === 0 ? 0 : startIdx + 1;
-  const shownTo   = Math.min(startIdx + reviewPageSize, filtered.length);
-  _s('reviewPgSummary', `Showing ${shownFrom.toLocaleString()}-${shownTo.toLocaleString()} of ${filtered.length.toLocaleString()}`);
-  _s('reviewPgOf', 'of ' + totalPages);
-
-  const pageSelect = document.getElementById('reviewPageSelect');
-  if(pageSelect){
-    pageSelect.innerHTML = Array.from({length: totalPages}, (_,i) => i+1)
-      .map(p => `<option value="${p}"${p===reviewPage?' selected':''}>${p}</option>`).join('');
-  }
-  const prevBtn = document.getElementById('reviewPgPrev');
-  const nextBtn = document.getElementById('reviewPgNext');
-  if(prevBtn) prevBtn.disabled = reviewPage <= 1;
-  if(nextBtn) nextBtn.disabled = reviewPage >= totalPages;
-}
-function filterReviewSearch(term){
-  reviewSearchTerm = term;
-  reviewPage = 1;
-  const wrap = document.getElementById('reviewSearchWrap');
-  if(wrap) wrap.classList.toggle('has-value', !!term);
-  renderReviewTable();
-}
-function clearReviewSearch(){
-  reviewSearchTerm = '';
-  reviewPage = 1;
-  const input = document.getElementById('reviewSearchInput');
-  if(input) input.value = '';
-  const wrap = document.getElementById('reviewSearchWrap');
-  if(wrap) wrap.classList.remove('has-value');
-  renderReviewTable();
-}
-function sortReviewRows(value){
-  reviewSortBy = value;
-  reviewPage = 1;
-  renderReviewTable();
-}
-function setReviewPageSize(value){
-  reviewPageSize = parseInt(value, 10) || 50;
-  reviewPage = 1;
-  renderReviewTable();
-}
-function goToReviewPage(value){
-  reviewPage = parseInt(value, 10) || 1;
-  renderReviewTable();
-}
-function reviewPrevPage(){
-  if(reviewPage > 1){ reviewPage--; renderReviewTable(); }
-}
-function reviewNextPage(){
-  reviewPage++;
-  renderReviewTable();
-}
-
-function buildRow(r) {
-  const state = getRowState(r);
-  const rowCls = state === 'error' ? 'row-error' : 'row-valid';
-
-  const icoCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  const icoWarn  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-
-  const pill = state === 'error'
-    ? `<span class="status-pill rejected status-pill-icon">${icoWarn}Error</span>`
-    : `<span class="status-pill approved status-pill-icon">${icoCheck}Valid</span>`;
-
-  const errMap = {};
-  (r._errors||[]).forEach(e => { errMap[e.field] = e; });
-
-  function cell(field, value, type='text') {
-    const err = errMap[field];
-    const isEmpty = !value || value.trim() === '';
-    const hasErr = !!err;
-
-  // DS PenEdit icon — exact SVG from design system (node 130:9)
-  const pencil = `<span class="cell-edit-hint">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 8.1917C20.0006 8.08642 19.9804 7.98206 19.9406 7.8846C19.9008 7.78714 19.8421 7.69849 19.768 7.62374L16.376 4.232C16.3012 4.15786 16.2126 4.0992 16.1151 4.05939C16.0176 4.01958 15.9133 3.9994 15.808 4.00001C15.7027 3.9994 15.5983 4.01958 15.5009 4.05939C15.4034 4.0992 15.3147 4.15786 15.24 4.232L12.976 6.49583L4.23201 15.2392C4.15787 15.3139 4.09921 15.4026 4.0594 15.5C4.01958 15.5975 3.9994 15.7019 4.00001 15.8071V19.1989C4.00001 19.411 4.0843 19.6145 4.23433 19.7645C4.38436 19.9145 4.58784 19.9988 4.80001 19.9988H8.19201C8.30395 20.0049 8.41592 19.9874 8.52066 19.9474C8.6254 19.9075 8.72057 19.8459 8.80001 19.7668L17.496 11.0235L19.768 8.79966C19.841 8.72213 19.9005 8.63289 19.944 8.53567C19.9517 8.47191 19.9517 8.40745 19.944 8.34369C19.9477 8.30645 19.9477 8.26893 19.944 8.2317L20 8.1917ZM7.86401 18.3989H5.60001V16.1351L13.544 8.1917L15.808 10.4555L7.86401 18.3989ZM16.936 9.32762L14.672 7.06378L15.808 5.93587L18.064 8.1917L16.936 9.32762Z" fill="#5e6463"/></svg>
-    <span style="font-size:14px;line-height:14px;color:#5e6463;font-family:var(--font-family-primary);">Edit</span>
-  </span>`;
-
-    // ── ERROR cells: input is shown upfront (no click needed), with the required fix noted below in red ──
-    if(hasErr){
-      return `<td class="review-cell error-cell">
-        <input class="cell-text-input error" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
-          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();">
-        <div class="cell-error-msg">${err.msg}</div>
-      </td>`;
-    }
-
-    // ── VALID cells: unchanged — click to reveal an editable input ──
-    const clickHandler = 'onclick';
-
-    // Text input
-    return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
-      <span class="cell-display"><span class="cell-value-text">${value||'—'}</span>${pencil}</span>
-      <div class="cell-input">
-        <input class="cell-text-input" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
-          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')cancelEdit(this.closest('.review-cell'))">
-      </div>
-    </td>`;
-  }
-
-  return `<tr class="${rowCls}" data-row="${r.row}" id="tr-${r.row}">
-    <td style="color:var(--color-text-secondary);font-size:var(--font-size-p3);">${r.row}</td>
-    ${cell('firstName',r.firstName)}
-    ${cell('lastName', r.lastName)}
-    ${cell('email',    r.email)}
-    ${cell('biz',      r.biz)}
-    <td class="review-cell">${buildTagsCell(r)}</td>
-    <td>${pill}</td>
-  </tr>`;
-}
-
-function buildTagsCell(r){
-  if(!r.tags) return `<span class="cell-display">—</span>`;
-  const tags = r.tags.split(',').map(t=>t.trim()).filter(Boolean);
-  return tags.map((t,i)=>`
-    <div style="margin-bottom:${i<tags.length-1?'var(--space-8)':'0'};">
-      <div style="font-size:var(--font-size-p2);color:var(--color-text-primary);margin-bottom:4px;">${t}</div>
-      <label class="ds-checkbox-wrap">
-        <input type="checkbox" class="ds-checkbox-input create-tag-check">
-        <span class="ds-checkbox-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-        <span class="ds-checkbox-label" style="font-size:var(--font-size-p3);">Create tag</span>
-      </label>
-    </div>`).join('');
-}
-function toggleAllCreateTag(checked){
-  document.querySelectorAll('.create-tag-check').forEach(cb => cb.checked = checked);
-}
-
-function buildTicketRow(r) {
-  const state = getRowState(r);
-  const rowCls = state === 'error' ? 'row-error' : 'row-valid';
-
-  const icoCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  const icoWarn  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
-
-  const pill = state === 'error'
-    ? `<span class="status-pill rejected status-pill-icon">${icoWarn}Error</span>`
-    : `<span class="status-pill approved status-pill-icon">${icoCheck}Valid</span>`;
-
-  const errMap = {};
-  (r._errors||[]).forEach(e => { errMap[e.field] = e; });
-
-  function cell(field, value) {
-    const err = errMap[field];
-    const hasErr = !!err;
-
-    const pencil = `<span class="cell-edit-hint">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 8.1917C20.0006 8.08642 19.9804 7.98206 19.9406 7.8846C19.9008 7.78714 19.8421 7.69849 19.768 7.62374L16.376 4.232C16.3012 4.15786 16.2126 4.0992 16.1151 4.05939C16.0176 4.01958 15.9133 3.9994 15.808 4.00001C15.7027 3.9994 15.5983 4.01958 15.5009 4.05939C15.4034 4.0992 15.3147 4.15786 15.24 4.232L12.976 6.49583L4.23201 15.2392C4.15787 15.3139 4.09921 15.4026 4.0594 15.5C4.01958 15.5975 3.9994 15.7019 4.00001 15.8071V19.1989C4.00001 19.411 4.0843 19.6145 4.23433 19.7645C4.38436 19.9145 4.58784 19.9988 4.80001 19.9988H8.19201C8.30395 20.0049 8.41592 19.9874 8.52066 19.9474C8.6254 19.9075 8.72057 19.8459 8.80001 19.7668L17.496 11.0235L19.768 8.79966C19.841 8.72213 19.9005 8.63289 19.944 8.53567C19.9517 8.47191 19.9517 8.40745 19.944 8.34369C19.9477 8.30645 19.9477 8.26893 19.944 8.2317L20 8.1917ZM7.86401 18.3989H5.60001V16.1351L13.544 8.1917L15.808 10.4555L7.86401 18.3989ZM16.936 9.32762L14.672 7.06378L15.808 5.93587L18.064 8.1917L16.936 9.32762Z" fill="#5e6463"/></svg>
-      <span style="font-size:14px;line-height:14px;color:#5e6463;font-family:var(--font-family-primary);">Edit</span>
-    </span>`;
-
-    if(hasErr){
-      return `<td class="review-cell error-cell">
-        <input class="cell-text-input error" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
-          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();">
-        <div class="cell-error-msg">${err.msg}</div>
-      </td>`;
-    }
-
-    const clickHandler = 'onclick';
-
-    return `<td class="review-cell editable" ${clickHandler}="startEdit(this)">
-      <span class="cell-display"><span class="cell-value-text">${value||'—'}</span>${pencil}</span>
-      <div class="cell-input">
-        <input class="cell-text-input" type="text" value="${value||''}" data-field="${field}" data-row="${r.row}"
-          onblur="saveCell(this)" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape')cancelEdit(this.closest('.review-cell'))">
-      </div>
-    </td>`;
-  }
-
-  return `<tr class="${rowCls}" data-row="${r.row}" id="tr-${r.row}">
-    <td style="color:var(--color-text-secondary);font-size:var(--font-size-p3);">${r.row}</td>
-    ${cell('firstName',    r.firstName)}
-    ${cell('lastName',     r.lastName)}
-    ${cell('email',        r.email)}
-    ${cell('ticketName',   r.ticketName)}
-    ${cell('price',        r.price)}
-    ${cell('purchaseDate', r.purchaseDate)}
-    <td>${pill}</td>
-  </tr>`;
-}
-function startEdit(cell) {
-  if(cell.classList.contains('editing')) return;
-  cell.classList.add('editing');
-  const input = cell.querySelector('input,select');
-  if(input) { input.focus(); if(input.select) input.select(); }
-}
-
-function cancelEdit(cell) {
-  cell.classList.remove('editing');
-}
-
-function saveCell(input) {
-  const isTicket = S.type === 'ticket';
-  const field = input.dataset.field;
-  const rowNum = parseInt(input.dataset.row);
-  const newVal = input.value.trim();
-  const rows = currentReviewRows();
-  const row = rows.find(r => r.row === rowNum);
-  if(!row) return;
-
-  const prevVal = row[field];
-
-  // Update the data
-  row[field] = newVal;
-
-  // Track this as a manual correction to surface later in the "Review import" modal —
-  // only real changes are logged, and only the very first "before" value is kept.
-  if(prevVal !== newVal){
-    const key = rowNum + '|' + field;
-    const label = (isTicket ? TICKET_FIELD_LABELS : VENDOR_FIELD_LABELS)[field] || field;
-    const existing = reviewEdits.get(key);
-    reviewEdits.set(key, {kind:'row', row: rowNum, field, label, original: existing ? existing.original : prevVal, current: newVal});
-  }
-
-  // Remove the error for this field if it's now filled
-  if(row._errors) {
-    row._errors = row._errors.filter(e => {
-      if(e.field !== field) return true;
-      // Validate the new value
-      if(e.type === 'missing' && newVal) return false;
-      if(field === 'email' && newVal && newVal.includes('@') && newVal.includes('.')) return false;
-      if(field === 'state' && US_STATES.includes(newVal)) return false;
-      if(field === 'price' && newVal && /^\$?\d+(\.\d{1,2})?$/.test(newVal)) return false;
-      if(field === 'purchaseDate' && newVal && /^[A-Za-z]{3}\s\d{1,2},\s\d{4}\s\d{1,2}:\d{2}\s?(am|pm)$/i.test(newVal)) return false;
-      if(e.type === 'format' && newVal && newVal !== 'Lorem Ipsum') return false;
-      if(e.type === 'duplicate' && newVal) return false;
-      if(e.type === 'invalid' && newVal) return false;
-      return true; // keep error
-    });
-    if(row._errors.length === 0) row._fixed = true;
-  }
-
-  // Re-render just this row
-  const tr = document.getElementById('tr-' + rowNum);
-  if(tr) tr.outerHTML = isTicket ? buildTicketRow(row) : buildRow(row);
-
-  // Update stats
-  const errCount   = rows.filter(r => getRowState(r)==='error').length;
-  const validCount = rows.filter(r => getRowState(r)==='valid').length;
-  const _s2 = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
-  _s2('r4-err',    errCount);
-  _s2('r4-valid',  validCount);
-  _s2('importLabel', validCount);
-  _s2('r-imp',       validCount);
-}
 
 function switchTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -3073,8 +2484,6 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     const bd=document.getElementById('overwriteModalBackdrop');
     if(bd && !bd.classList.contains('hidden')) closeOverwriteModal();
-    const brd=document.getElementById('bulkReplaceBackdrop');
-    if(brd && !brd.classList.contains('hidden')) closeBulkReplacePanel();
     const emd=document.getElementById('crmEmailModalBackdrop');
     if(emd && !emd.classList.contains('hidden')) closeCrmEmailModal();
   }
@@ -3083,10 +2492,22 @@ document.addEventListener('keydown',e=>{
 /* ── STEP 5 — IMPORT ── */
 function startImport(){
   goTo(5);
+  const progressBox = document.getElementById('importProgressBox');
+  const bgBox = document.getElementById('importBackgroundBox');
+  if(progressBox) progressBox.classList.remove('hidden');
+  if(bgBox) bgBox.classList.add('hidden');
+
+  const fileName=S.file?S.file.name:'vendor_list.xlsx';
+  const isLargeImport = !!(S.file && S.file.size > LARGE_IMPORT_THRESHOLD);
+
+  if(isLargeImport){
+    startLargeImport(fileName);
+    return;
+  }
+
   const log=document.getElementById('importLog');
   const fill=document.getElementById('pFill');
   const pct=document.getElementById('pPct');
-  const fileName=S.file?S.file.name:'vendor_list.xlsx';
 
   // Playful captions — cycle underneath the mascot to make the wait feel shorter
   const captions=[
@@ -3137,6 +2558,47 @@ function startImport(){
   });
   setTimeout(showResults,6500);
 }
+
+/* ── Large imports — the actual per-row work (validate/dedup/write thousands of records)
+   is what can genuinely run long, so this is where the "we'll email you" hand-off lives,
+   rather than at the upload step where it's just a fast byte transfer. ── */
+function startLargeImport(fileName){
+  const log=document.getElementById('importLog');
+  const fill=document.getElementById('pFill');
+  const pct=document.getElementById('pPct');
+  const rows = S.fileRows || 0;
+
+  _s('importTitle', 'Starting your import…');
+  _s('importDesc', 'This file has '+rows.toLocaleString()+' rows, so it will take a bit longer to get going.');
+
+  const lines=[
+    {t:300,  txt:'-> Parsing file: '+fileName,                         cls:''},
+    {t:900,  txt:'OK '+rows.toLocaleString()+' rows detected',         cls:'log-ok'},
+    {t:1500, txt:'-> Applying column mapping…',                        cls:''},
+    {t:2000, txt:'OK All required fields mapped',                      cls:'log-ok'},
+    {t:2600, txt:'-> This is a big job — handing it off to run in the background…', cls:''},
+  ];
+  lines.forEach((l,i)=>{
+    setTimeout(()=>{
+      const d=document.createElement('div');
+      d.className=l.cls;d.textContent=l.txt;
+      log.appendChild(d);log.scrollTop=log.scrollHeight;
+      const p=Math.round((i+1)/(lines.length+1)*100);
+      fill.style.width=p+'%';pct.textContent=p+'%';
+    },l.t);
+  });
+
+  setTimeout(()=>{
+    const progressBox = document.getElementById('importProgressBox');
+    const bgBox = document.getElementById('importBackgroundBox');
+    if(progressBox) progressBox.classList.add('hidden');
+    if(bgBox) bgBox.classList.remove('hidden');
+    _s('importTitle', 'Your import is running in the background');
+    _s('importDesc', '');
+    toast('This is a big import — we’ll email you when it’s ready','info');
+  }, 3400);
+}
+
 function showResults(){
   const rows = currentReviewRows();
   const validCount = rows.filter(r=>getRowState(r)==='valid').length;
@@ -3145,15 +2607,16 @@ function showResults(){
 
   _s('resultTitle', failCount>0 ? 'Setup complete — some rows need attention' : 'Account setup complete');
   _s('resultSub', S.type==='ticket' ? 'Your ticket purchaser data is now in Eventeny.' : 'Your vendor data is now in Eventeny.');
-  _s('dashCardDesc', S.type==='ticket' ? 'See every ticket purchaser you just imported, organized and searchable in one place.' : 'See every vendor you just imported, organized and searchable in one place.');
   _s('resultViewListBtn', S.type==='ticket' ? 'View ticket purchaser list' : 'View vendor list');
-  _s('resultGoToListBtn', S.type==='ticket' ? 'Go to ticket purchaser list' : 'Go to vendor list');
   _s('r-imp',  validCount);
   _s('r-skip', skipCount);
   _s('r-fail', failCount);
 
   const errBox = document.getElementById('errReportBox');
   if (errBox) errBox.classList.toggle('hidden', failCount === 0);
+  _s('errReportTitle', failCount + ' row' + (failCount===1?'':'s') + ' failed to import');
+  const checkErrBtn = document.getElementById('checkErrorReportBtn');
+  if (checkErrBtn) checkErrBtn.disabled = failCount === 0;
 
   goTo(6);
   toast('Setup complete! '+validCount+(S.type==='ticket'?' ticket purchasers added.':' vendors added.'),'success');
@@ -3172,6 +2635,10 @@ function resetWizard(){
   _s('importTitle','Importing your data…');
   _s('importDesc',"This usually takes less than a minute. Don't close this tab.");
   _sh('importEmoji','<div class="hg-body"><div class="hg-cap hg-cap-top"></div><div class="hg-glass hg-glass-top"><div class="hg-sand hg-sand-top"></div></div><div class="hg-neck"><span class="hg-grain hg-grain-1"></span><span class="hg-grain hg-grain-2"></span><span class="hg-grain hg-grain-3"></span></div><div class="hg-glass hg-glass-bottom"><div class="hg-sand hg-sand-bottom"></div></div><div class="hg-cap hg-cap-bottom"></div></div>');
+  const progressBox = document.getElementById('importProgressBox');
+  const bgBox = document.getElementById('importBackgroundBox');
+  if (progressBox) progressBox.classList.remove('hidden');
+  if (bgBox) bgBox.classList.add('hidden');
   const errBox = document.getElementById('errReportBox');
   if (errBox) errBox.classList.add('hidden');
 
@@ -3220,46 +2687,6 @@ function toast(msg,type='info'){
     <div class="modal-footer">
       <button type="button" class="btn btn-tertiary btn-md" onclick="closeOverwriteModal()"><span>Cancel</span></button>
       <button type="button" class="btn btn-primary btn-md" onclick="confirmOverwriteAndImport()"><span>Confirm and update</span></button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- SIDE PANEL — Replace column values in bulk (Step 3 mapping, "N errors" data-status pill) -->
-<!-- ═══════════════════════════════════════ -->
-<div class="side-panel-backdrop hidden" id="bulkReplaceBackdrop" onclick="if(event.target===this)closeBulkReplacePanel();">
-  <div class="side-panel" role="dialog" aria-modal="true" aria-labelledby="bulkReplaceTitle">
-    <div class="side-panel-header">
-      <div class="side-panel-header-text">
-        <div class="side-panel-title" id="bulkReplaceTitle">
-          <span>Replace column values in bulk</span>
-          <span class="tooltip-wrap" style="position:relative;display:inline-flex;align-items:center;">
-            <svg class="info-icon-trigger" style="display:block;width:16px;height:16px;flex-shrink:0;color:var(--color-text-secondary);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            <span class="tooltip top">
-              <span class="tooltip-label">How this works</span>
-              <span class="tooltip-desc">Values that couldn't be validated are grouped below. Enter a replacement for each one, then click Done to apply it to every matching row.</span>
-            </span>
-          </span>
-        </div>
-        <div class="side-panel-desc" id="bulkReplaceDesc"></div>
-      </div>
-      <button type="button" class="side-panel-close" onclick="closeBulkReplacePanel()" title="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="side-panel-body">
-      <div class="replace-table-wrap">
-        <div class="replace-table-header replace-grid">
-          <span>Column value</span><span></span><span>Replacement value</span>
-        </div>
-        <div class="replace-grid" id="bulkReplaceRows"></div>
-      </div>
-      <div class="replace-actions-row">
-        <button type="button" class="link-tertiary" onclick="addBulkReplaceRow()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Replace another value</span></button>
-        <button type="button" class="link-tertiary" style="color:var(--color-text-secondary);" onclick="resetBulkReplaceChanges()"><span>Reset all changes</span></button>
-      </div>
-    </div>
-    <div class="side-panel-footer">
-      <button type="button" class="btn btn-tertiary btn-sm" onclick="closeBulkReplacePanel()"><span>Cancel</span></button>
-      <button type="button" class="btn btn-primary btn-sm" onclick="applyBulkReplace()"><span>Done</span></button>
     </div>
   </div>
 </div>
