@@ -1225,6 +1225,18 @@ tr.row-valid { background: white; }
         <p class="card-desc" id="importDesc" style="text-align:center;">This usually takes less than a minute. Don't close this tab.</p>
       </div>
 
+      <!-- Background-processing banner — sits right under the title once a large import hands
+           off, while the hourglass/log below keep showing so it doesn't feel like the page stopped. -->
+      <div class="hidden alert alert-info" id="importBgAlert" style="margin-bottom:var(--space-24);">
+        <div class="alert-inner">
+          <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          <div>
+            <span class="alert-title">This import is bigger than usual</span>
+            <div>We'll keep running it in the background and email you as soon as it's done. Feel free to close this tab — you can check progress anytime from the Data imports hub.</div>
+          </div>
+        </div>
+      </div>
+
       <div id="importProgressBox">
         <!-- Mascot + progress -->
         <div style="text-align:center;padding:var(--space-16) 0;">
@@ -1252,21 +1264,9 @@ tr.row-valid { background: white; }
         </div>
       </div>
 
-      <!-- Shown instead of the progress box once a large import hands off to the background —
-           the real work (validating/writing thousands of rows) keeps running server-side. -->
-      <div class="hidden" id="importBackgroundBox">
-        <div class="alert alert-info" style="margin-bottom:var(--space-24);">
-          <div class="alert-inner">
-            <span class="alert-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-            <div>
-              <span class="alert-title">This import is bigger than usual</span>
-              <div>We'll keep running it in the background and email you as soon as it's done. Feel free to close this tab — you can check progress anytime from the Data imports hub.</div>
-            </div>
-          </div>
-        </div>
-        <div style="text-align:center;">
-          <button class="btn btn-secondary btn-md" onclick="openDashboard()"><span>Back to dashboard</span></button>
-        </div>
+      <!-- Back-to-dashboard action — appears once a large import hands off to the background. -->
+      <div class="hidden" id="importBgBackBtn" style="text-align:center;margin-top:var(--space-24);">
+        <button class="btn btn-secondary btn-md" onclick="openDashboard()"><span>Back to dashboard</span></button>
       </div>
     </div>
   </div>
@@ -2448,9 +2448,11 @@ document.addEventListener('keydown',e=>{
 function startImport(){
   goTo(5);
   const progressBox = document.getElementById('importProgressBox');
-  const bgBox = document.getElementById('importBackgroundBox');
+  const bgAlert = document.getElementById('importBgAlert');
+  const bgBackBtn = document.getElementById('importBgBackBtn');
   if(progressBox) progressBox.classList.remove('hidden');
-  if(bgBox) bgBox.classList.add('hidden');
+  if(bgAlert) bgAlert.classList.add('hidden');
+  if(bgBackBtn) bgBackBtn.classList.add('hidden');
 
   const fileName=S.file?S.file.name:'vendor_list.xlsx';
   const isLargeImport = !!(S.file && S.file.size > LARGE_IMPORT_THRESHOLD);
@@ -2544,12 +2546,18 @@ function startLargeImport(fileName){
   });
 
   setTimeout(()=>{
-    const progressBox = document.getElementById('importProgressBox');
-    const bgBox = document.getElementById('importBackgroundBox');
-    if(progressBox) progressBox.classList.add('hidden');
-    if(bgBox) bgBox.classList.remove('hidden');
+    // Keep importProgressBox visible — the hourglass keeps animating and the log
+    // stays put — we just surface the background-processing banner up top (under the
+    // title) and the back-to-dashboard action at the bottom, rather than swapping the
+    // whole scene away.
+    const bgAlert = document.getElementById('importBgAlert');
+    const bgBackBtn = document.getElementById('importBgBackBtn');
+    if(bgAlert) bgAlert.classList.remove('hidden');
+    if(bgBackBtn) bgBackBtn.classList.remove('hidden');
     _s('importTitle', 'Your import is running in the background');
     _s('importDesc', '');
+    const caption=document.getElementById('mascotCaption');
+    if(caption) caption.textContent='Still chugging along back here…';
   }, 3400);
 }
 
@@ -2589,10 +2597,13 @@ function resetWizard(){
   _s('importTitle','Importing your data…');
   _s('importDesc',"This usually takes less than a minute. Don't close this tab.");
   _sh('importEmoji','<div class="hg-body"><div class="hg-cap hg-cap-top"></div><div class="hg-glass hg-glass-top"><div class="hg-sand hg-sand-top"></div></div><div class="hg-neck"><span class="hg-grain hg-grain-1"></span><span class="hg-grain hg-grain-2"></span><span class="hg-grain hg-grain-3"></span></div><div class="hg-glass hg-glass-bottom"><div class="hg-sand hg-sand-bottom"></div></div><div class="hg-cap hg-cap-bottom"></div></div>');
+  _s('mascotCaption','Rolling your data in…');
   const progressBox = document.getElementById('importProgressBox');
-  const bgBox = document.getElementById('importBackgroundBox');
+  const bgAlert = document.getElementById('importBgAlert');
+  const bgBackBtn = document.getElementById('importBgBackBtn');
   if (progressBox) progressBox.classList.remove('hidden');
-  if (bgBox) bgBox.classList.add('hidden');
+  if (bgAlert) bgAlert.classList.add('hidden');
+  if (bgBackBtn) bgBackBtn.classList.add('hidden');
   const errBox = document.getElementById('errReportBox');
   if (errBox) errBox.classList.add('hidden');
 
