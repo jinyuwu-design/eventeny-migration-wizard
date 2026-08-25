@@ -1172,7 +1172,6 @@ tr.row-valid { background: white; }
           <option value="default">Sort by status</option>
           <option value="notfound">Not found</option>
           <option value="mapped">Mapped</option>
-          <option value="skipped">Skipped</option>
         </select>
       </div>
 
@@ -1490,8 +1489,8 @@ const vendorCols = [
      {value:'www.bluesky',                  rows:2},
      {value:'facebook.com/prismgallery',    rows:1},
    ]},
-  {src:'Facebook Link',     samples:['https://fb.com/acme','https://fb.com/bluesky','https://fb.com/prism'],    field:'facebook',          req:false},
-  {src:'Instagram Link',    samples:['https://ig.com/acme','https://ig.com/bluesky','https://ig.com/prism'],    field:'instagram',         req:false},
+  {src:'facebok link',      samples:['https://fb.com/acme','https://fb.com/bluesky','https://fb.com/prism'],    field:'facebook',          req:false},
+  {src:'instagram lnk',     samples:['https://ig.com/acme','https://ig.com/bluesky','https://ig.com/prism'],    field:'instagram',         req:false},
   {src:'Twitter Link',      samples:['https://x.com/acme','https://x.com/bluesky','https://x.com/prism'],       field:'twitter',           req:false},
   {src:'Special request',   samples:['Corner booth preferred','Near power outlet','Shade required'],            field:'special_request',   req:false},
   {src:'Logo URL',          samples:['https://eventeny.com/logo','https://eventeny.com/logo2','https://eventeny.com/logo3'], field:'logo_url', req:false},
@@ -1520,9 +1519,9 @@ const ticketCols = [
    errorValues:[
      {value:'',         rows:3},
    ]},
-  {src:'Confirmation code',        samples:['TLQTQCSC','NDSNVGHK','CQPZBBTJ'],                                     field:'confirmation_code',        req:false},
+  {src:'confirmaton code',         samples:['TLQTQCSC','NDSNVGHK','CQPZBBTJ'],                                     field:'confirmation_code',        req:false},
   {src:'Seat #',                   samples:['—','S2','S4'],                                                       field:'seat_number',              req:false},
-  {src:'Seat section',             samples:['—','—','—'],                                                          field:'seat_section',             req:false},
+  {src:'seat sction',              samples:['—','—','—'],                                                          field:'seat_section',             req:false},
   {src:'Time slot date',           samples:['—','—','—'],                                                          field:'time_slot_date',           req:false},
   {src:'Time slot open',           samples:['—','—','—'],                                                          field:'time_slot_open',           req:false},
   {src:'Time slot closed',         samples:['—','—','—'],                                                          field:'time_slot_closed',         req:false},
@@ -1545,8 +1544,8 @@ const ticketCols = [
   {src:'Check-in by',              samples:['—','—','—'],                                                          field:'checkin_by',               req:false},
   {src:'Payment source',           samples:['Card entered by admin','Card entered by purchaser','Card entered by purchaser'], field:'payment_source', req:false},
   {src:'Discount title',           samples:['—','—','—'],                                                          field:'discount_title',           req:false},
-  {src:'Discount code',            samples:['—','—','—'],                                                          field:'discount_code',            req:false},
-  {src:'Affiliate code',           samples:['—','—','—'],                                                          field:'affiliate_code',           req:false},
+  {src:'discount cod',             samples:['—','—','—'],                                                          field:'discount_code',            req:false},
+  {src:'affilate code',            samples:['—','—','—'],                                                          field:'affiliate_code',           req:false},
   {src:'Price',                    samples:['$0.00','$25.00','$0.00'],                                             field:'price',                    req:true,
    errorValues:[
      {value:'free',     rows:2},
@@ -1564,7 +1563,7 @@ const ticketCols = [
   {src:'Fees refunded',            samples:['$0.00','$0.00','$0.00'],                                              field:'fees_refunded',            req:false},
   {src:'Payout amount',            samples:['$0.00','$25.00','$0.00'],                                             field:'payout_amount',            req:false},
   {src:'Payout amount excluding tax', samples:['$0.00','$25.00','$0.00'],                                          field:'payout_amount_excluding_tax', req:false},
-  {src:'Payout account ID',        samples:['—','—','—'],                                                          field:'payout_account_id',        req:false},
+  {src:'payout acct id',           samples:['—','—','—'],                                                          field:'payout_account_id',        req:false},
   {src:'Payout account name',      samples:['Check','Check','Check'],                                              field:'payout_account_name',      req:false},
 ];
 
@@ -2166,9 +2165,9 @@ function selectType(t) {
   _s('exportExistingTooltip', 'Downloads a CSV of the '+(t==='vendor'?'vendors':'ticket purchasers')+' already in your Eventeny account, so you can edit them in bulk and re-upload the updated file here.');
 }
 function proceedFromMapping(){
-  // Both import types go straight from mapping to the overwrite-confirmation modal —
-  // there's no more Review data / correction step in between.
-  openOverwriteModal();
+  // Both import types go straight from mapping to the import — no correction
+  // step and no confirmation modal in between.
+  startImport();
 }
 function selectDest(d) {
   S.dest=d;
@@ -2262,7 +2261,7 @@ let mapPageSize = 20;
 function buildMap(){
   const cols=S.type==='vendor'?vendorCols:ticketCols;
   const opts=S.type==='vendor'?vendorOpts:ticketOpts;
-  const notFound=S.type==='vendor'?['facebook','instagram','twitter','special_request','logo_url']:['phone','order_number','notes'];
+  const notFound=S.type==='vendor'?['facebook','instagram','twitter','special_request','logo_url']:['confirmation_code','discount_code','affiliate_code','payout_account_id','seat_section'];
 
   // Sort: either the manual "Sort by status" selection, or the default flagged-first order
   const sorted = [...cols].sort((a,b)=>{
@@ -2275,10 +2274,6 @@ function buildMap(){
     }
     if(mapSortBy === 'mapped'){
       const score = c => isM(c) ? 0 : 1;
-      return score(a) - score(b);
-    }
-    if(mapSortBy === 'skipped'){
-      const score = c => (!c.req && !isNF(c) && !c.field) ? 0 : 1;
       return score(a) - score(b);
     }
     // default — flagged first (not found, then required unmapped), then matched, then optional
@@ -2442,48 +2437,8 @@ function switchTab(id,el){
   document.getElementById('tab-'+id).classList.add('active');
 }
 
-/* ── OVERWRITE CONFIRMATION MODAL ── */
-function openOverwriteModal(){
-  const validCount=currentReviewRows().filter(r=>getRowState(r)==='valid').length;
-  const edits=Array.from(reviewEdits.values()).sort((a,b)=>(a.row||0)-(b.row||0));
-
-  if(edits.length === 0){
-    _sh('overwriteModalBody', `<tr><td colspan="4" style="text-align:center;color:var(--color-text-secondary);padding:var(--space-24) 0;">No manual corrections were made — this import will be applied exactly as uploaded.</td></tr>`);
-  } else {
-    _sh('overwriteModalBody', edits.map(e => `<tr>
-      <td>
-        <div style="font-weight:var(--font-weight-semibold);">${e.label}</div>
-        <div style="font-size:var(--font-size-p3);color:var(--color-text-secondary);">${e.kind==='bulk' ? `${e.rowCount} row${e.rowCount===1?'':'s'}` : `Row ${e.row}`}</div>
-      </td>
-      <td><span class="tag-secondary">${e.original || '—'}</span></td>
-      <td style="color:var(--color-text-secondary);white-space:nowrap;">will be set to</td>
-      <td><span class="tag">${e.current || '—'}</span></td>
-    </tr>`).join(''));
-  }
-
-  const desc=document.querySelector('#overwriteModalBackdrop .modal-desc');
-  if(desc){
-    if(edits.length === 0){
-      desc.textContent = `Confirming will import all ${validCount} valid row${validCount===1?'':'s'} in this file. Changes will be applied immediately.`;
-    } else {
-      const rowCount = edits.reduce((s,e)=> s + (e.kind==='bulk' ? (e.rowCount||0) : 1), 0);
-      desc.textContent = `You corrected ${edits.length} value${edits.length===1?'':'s'} across ${rowCount} row${rowCount===1?'':'s'}. Confirming will import all ${validCount} valid row${validCount===1?'':'s'} with these corrections applied. Changes will be applied immediately.`;
-    }
-  }
-
-  document.getElementById('overwriteModalBackdrop').classList.remove('hidden');
-}
-function closeOverwriteModal(){
-  document.getElementById('overwriteModalBackdrop').classList.add('hidden');
-}
-function confirmOverwriteAndImport(){
-  closeOverwriteModal();
-  startImport();
-}
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    const bd=document.getElementById('overwriteModalBackdrop');
-    if(bd && !bd.classList.contains('hidden')) closeOverwriteModal();
     const emd=document.getElementById('crmEmailModalBackdrop');
     if(emd && !emd.classList.contains('hidden')) closeCrmEmailModal();
   }
@@ -2595,7 +2550,6 @@ function startLargeImport(fileName){
     if(bgBox) bgBox.classList.remove('hidden');
     _s('importTitle', 'Your import is running in the background');
     _s('importDesc', '');
-    toast('This is a big import — we’ll email you when it’s ready','info');
   }, 3400);
 }
 
@@ -2656,40 +2610,6 @@ function toast(msg,type='info'){
   setTimeout(()=>el.remove(),4000);
 }
 </script>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- OVERWRITE CONFIRMATION MODAL — Figma node 10880:65828 "Review edits" -->
-<!-- ═══════════════════════════════════════ -->
-<div class="modal-backdrop hidden" id="overwriteModalBackdrop" onclick="if(event.target===this)closeOverwriteModal();">
-  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="overwriteModalTitle">
-    <div class="modal-header">
-      <div class="modal-header-text">
-        <div class="modal-title" id="overwriteModalTitle">Review import</div>
-        <div class="modal-desc">Review the fields below. Confirming will overwrite any existing matching records with these values. Changes will be applied immediately.</div>
-      </div>
-      <button type="button" class="modal-close" onclick="closeOverwriteModal()" title="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="table-wrap">
-        <table class="map-table">
-          <thead>
-            <tr>
-              <th>Corrected field</th>
-              <th>Existing values</th>
-              <th></th>
-              <th>Updated values</th>
-            </tr>
-          </thead>
-          <tbody id="overwriteModalBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-tertiary btn-md" onclick="closeOverwriteModal()"><span>Cancel</span></button>
-      <button type="button" class="btn btn-primary btn-md" onclick="confirmOverwriteAndImport()"><span>Confirm and update</span></button>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════════════════════════════════════ -->
 <!-- CRM DASHBOARD — bulk email modal ("Email selected" toolbar action) -->
